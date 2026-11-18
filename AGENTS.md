@@ -3,7 +3,7 @@
 This repo contains Agent Skills (`skills/<name>/SKILL.md`, agentskills.io format) for **Blender 5.2 LTS+**, verified on 5.3. Codex, OpenCode, Gemini CLI, Copilot and Cursor read them from `.agents/skills`; Claude Code reads them from `.claude/skills` (see `install/`).
 
 ## Using the skills
-- Start any Blender task with `skills/blender-core/SKILL.md`. It routes to the specialized skill and defines how to run code: live through the blender-mcp `execute_blender_code`, or headless with `python skills/blender-core/scripts/run_in_blender.py <script.py> -- <args>`.
+- Start any Blender task with `skills/blender-core/SKILL.md`. It routes to the specialized skill and defines how to run code: live through the blender-mcp `execute_blender_code`, headless with `python skills/blender-core/scripts/run_in_blender.py <script.py> -- <args>`, or on Patch's cloud Blender with `--cloud` added (see `skills/blender-cloud/SKILL.md`; it costs credits).
 - Run scripts; don't read them. Every `skills/*/scripts/*.py` documents its flags in its docstring and prints one compact JSON result.
 - Load a skill's `references/*.md` only when the SKILL.md points you there.
 - Always finish geometry work with `skills/blender-asset-qa` (numbers + a visual check).
@@ -11,6 +11,7 @@ This repo contains Agent Skills (`skills/<name>/SKILL.md`, agentskills.io format
 | Skill | Use for |
 |---|---|
 | blender-core | execution, 5.x API rules, routing (start here) |
+| blender-cloud | Patch's cloud Blender: sessions, files, previews, GPU renders, forks |
 | blender-scene-setup | units, naming, collections, linking, asset libraries |
 | blender-hardsurface-modeling | bevels, booleans, weighted normals, props |
 | blender-sculpting | organic forms, multires, procedural sculpt ops |
@@ -42,5 +43,5 @@ This repo contains Agent Skills (`skills/<name>/SKILL.md`, agentskills.io format
 ## Working on this repo
 - Shared helper: edit `shared/_bpyx.py` only, then run `python tools/sync_shared.py`.
 - Validate: `python tools/validate_skills.py` (spec, token budgets, links, script contract).
-- Test: `python tools/run_tests.py [filter]` (needs Blender 5.3 or 5.2 LTS; set `BLENDER_EXE` if it isn't found). Set `BAS_SKIP_GPU=1` on machines without a GPU.
+- Test: `python tools/run_tests.py [filter]` (needs Blender 5.3 or 5.2 LTS; set `BLENDER_EXE` if it isn't found). Set `BAS_SKIP_GPU=1` on machines without a GPU. `python tools/run_tests.py --cloud` runs the same suite on Patch's cloud Blender. Demos: `demos/AUTHORING.md`.
 - Keep each SKILL.md ≤ ~2.5k tokens and each description ≤ 400 chars. Verify every API claim against a running Blender 5.3 before writing it, and keep scripts working on 5.2 LTS.

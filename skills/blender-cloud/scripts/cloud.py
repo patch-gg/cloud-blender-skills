@@ -10,9 +10,11 @@ the same place relative to this folder, and files a call writes come back here t
 Usage:
   python cloud.py run [--blend in.blend] [--process] [--upload PATH]... SCRIPT.py [-- args]
   python cloud.py expr "import bpy; print(len(bpy.data.objects))"
+  python cloud.py exec "ffmpeg -i render/f_%04d.png clip.mp4"   # a shell command in /work
   python cloud.py look [-o look.jpg] [--angles 4] [--engine eevee] [--camera Cam]
   python cloud.py render [scene.blend] [-o renders/] [--frames 1-120] [--video mp4]
       [--engine eevee|cycles] [--gpu l40s|l4] [--max-cost 40]   # no .blend: the session's scene
+  python cloud.py fork [--count 3]      # copies of the session to try things side by side
   python cloud.py push PATH...  |  pull PATH...  |  status  |  stop
   python cloud.py start [--size small|medium|large] [--gpu l4|l40s] [--name NAME]
 Common flags: --session ses_... (default: the one saved in .cloud-blender.json here, else a new
@@ -24,6 +26,7 @@ import argparse
 import hashlib
 import json
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -36,7 +39,8 @@ SKILLS = HERE.parents[1]                      # .../skills (or ~/.claude/skills 
 STATE = ".cloud-blender.json"
 REMOTE_SKILLS = "_skills"                     # /work/_skills/<skill>/scripts/...
 REMOTE_IN = "_in"                             # inputs from outside this folder
-SKIP_PULL = (REMOTE_SKILLS + "/", REMOTE_IN + "/", ".patch/", "_render/", "__pycache__/")
+REMOTE_RUNS = "_runs"                         # logs of --process runs that failed
+SKIP_PULL = (REMOTE_SKILLS + "/", REMOTE_IN + "/", REMOTE_RUNS + "/", ".patch/", "_render/", "__pycache__/")
 MARK = "@@JSON@@"
 BLENDER_LIB = "/opt/blender/lib"              # cloud image layout (Blender 5.2.0)
 
@@ -111,21 +115,29 @@ def pch_cmd():
     return [exe]
 
 
-def pch(*args, timeout=None, ok=(0,)):
-    """Run `pch --json ...`; return (exit code, parsed stdout). Raise on codes not in ok."""
+def pch(*args, timeout=None, ok=(0,), retries=0):
+    """Run `pch --json ...`; return (exit code, parsed stdout). Raise on codes not in ok, and on any failing
+    exit that printed nothing. retries: how often to try again after a dropped connection (only for calls
+    that are safe to repeat)."""
     cmd = pch_cmd() + ["--json", *[str(a) for a in args]]
-    try:
-        p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace",
-                           timeout=timeout)
-    except subprocess.TimeoutExpired:
-        raise CloudError(f"pch {' '.join(map(str, args[:3]))} gave no answer in {timeout} s")
-    data = None
-    if p.stdout.strip():
+    for attempt in range(retries + 1):
         try:
-            data = json.loads(p.stdout)
-        except ValueError:
-            data = {"text": p.stdout[-4000:]}
-    if p.returncode not in ok:
+            p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace",
+                               timeout=timeout)
+        except subprocess.TimeoutExpired:
+            raise CloudError(f"pch {' '.join(map(str, args[:3]))} gave no answer in {timeout} s")
+        data = None
+        if p.stdout.strip():
+            try:
+                data = json.loads(p.stdout)
+            except ValueError:
+                data = {"text": p.stdout[-4000:]}
+        if os.environ.get("BAS_CLOUD_DEBUG"):  # a file to log every pch call to (no secrets: replies only)
+            with open(os.environ["BAS_CLOUD_DEBUG"], "a", encoding="utf-8") as f:
+                f.write(json.dumps({"t": round(time.time(), 1), "args": [str(a) for a in args][:8], "exit": p.returncode,
+                                    "out": p.stdout[:300] + " ... " + p.stdout[-300:], "err": p.stderr[-300:]}) + "\n")
+        if p.returncode in ok and (data is not None or p.returncode == 0):
+            return p.returncode, data
         err = None
         for line in reversed(p.stderr.splitlines()):
             try:
@@ -137,9 +149,18 @@ def pch(*args, timeout=None, ok=(0,)):
                 break
         msg = (err or {}).get("message") if isinstance(err, dict) else None
         code = 2 if p.returncode == 4 else (3 if p.returncode == 3 else 1)
-        raise CloudError(msg or (p.stderr.strip().splitlines() or ["pch failed"])[-1], code,
-                         {"pch_exit": p.returncode, "args": [str(a) for a in args[:4]], "error": err})
-    return p.returncode, data
+        e = CloudError(msg or (p.stderr.strip().splitlines() or ["pch failed"])[-1], code,
+                       {"pch_exit": p.returncode, "args": [str(a) for a in args[:4]], "error": err})
+        if attempt < retries and transient(e):
+            time.sleep(4 * (attempt + 1))
+            continue
+        raise e
+
+
+def transient(e):
+    """A dropped connection to a session (the work goes on there) or a session still waking up."""
+    err = (e.details or {}).get("error") or {}
+    return err.get("code") in ("session_unreachable", "session_not_ready") or "fetch failed" in str(e)
 
 
 # ---------------------------------------------------------------- state + session
@@ -163,8 +184,7 @@ def start_session(o, st):
     if getattr(o, "gpu", None):
         a += ["--gpu", o.gpu]
     _, s = pch(*a, ok=(0, 7), timeout=300)
-    st.clear()
-    st.update({"session": s["id"], "skills": None})
+    st["session"] = s["id"]
     save_state(o.dir, st)
     return s["id"]
 
@@ -172,14 +192,11 @@ def start_session(o, st):
 def session(o, st):
     """The session to use: --session, the saved one if it's still alive, or a new one."""
     if o.session:
-        if st.get("session") != o.session:
-            st.clear()
-            st.update({"session": o.session, "skills": None})
-        return o.session
+        return o.session  # an explicit session never replaces the one saved here
     sid = st.get("session")
     if sid:
         try:
-            _, s = pch("blender", "session", "view", sid, timeout=60)
+            _, s = pch("blender", "session", "view", sid, timeout=60, retries=2)
             if s.get("state") not in ("stopped", "failed", "error") and s.get("desired_state") != "stopped":
                 return sid
         except CloudError:
@@ -205,15 +222,20 @@ def sync_skills(o, sid, st):
         h.update(str(f.relative_to(SKILLS)).encode())
         h.update(f.read_bytes())
     digest = h.hexdigest()[:16]
-    if st.get("skills") == digest and st.get("session") == sid:
+    synced = st.setdefault("synced", {})
+    if synced.get(sid) == digest:
         return
     with tempfile.TemporaryDirectory(prefix="bas_skills_") as tmp:
         for f in files:
             dst = Path(tmp) / f.relative_to(SKILLS)
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(f, dst)
-        pch("blender", "files", "upload", sid, tmp, "--to", REMOTE_SKILLS + "/", timeout=900)
-    st["skills"] = digest
+        pch("blender", "files", "upload", sid, tmp, "--to", REMOTE_SKILLS + "/", timeout=900, retries=2)
+    fresh = load_state(o.dir)                     # another call may have written it meanwhile
+    synced = {**fresh.get("synced", {}), **st.get("synced", {}), sid: digest}
+    st["synced"] = synced
+    if "session" not in st and fresh.get("session"):
+        st["session"] = fresh["session"]
     save_state(o.dir, st)
 
 
@@ -244,7 +266,7 @@ def upload(o, sid, paths):
         a = ["blender", "files", "upload", sid, *map(str, srcs)]
         if to:
             a += ["--to", to]
-        pch(*a, timeout=1800)
+        pch(*a, timeout=1800, retries=2)
     return mapping
 
 
@@ -263,7 +285,7 @@ def snapshot(sid):
     files, after = {}, None
     while True:
         a = ["blender", "files", "ls", sid, "--limit", "1000"] + (["--after", after] if after else [])
-        _, d = pch(*a, timeout=120)
+        _, d = pch(*a, timeout=120, retries=3)
         page = d.get("files", [])
         for f in page:
             files[f["path"]] = (f.get("size"), f.get("modified_at"))
@@ -279,7 +301,7 @@ def pull(o, sid, paths, limit_mb=None):
     if not paths:
         return [], []
     with tempfile.TemporaryDirectory(prefix="bas_pull_") as tmp:
-        _, d = pch("blender", "files", "download", sid, *paths, "-o", tmp, timeout=3600)
+        _, d = pch("blender", "files", "download", sid, *paths, "-o", tmp, timeout=3600, retries=2)
         got = []
         for r in (d or {}).get("downloaded", []) + (d or {}).get("unchanged", []):
             src = Path(tmp) / r
@@ -310,12 +332,71 @@ def pull_changed(o, sid, before, after, limit_mb):
 # ---------------------------------------------------------------- commands
 
 def wait_run(sid, first, timeout):
-    """Follow a run/exec that outlasted pch's wait until it ends."""
+    """Follow a run/exec until it ends, in short waits: one long wait can drop ("fetch failed") while the
+    work goes on in the session."""
     data, deadline = first, time.time() + timeout + 300
-    while data and data.get("timed_out") and time.time() < deadline:
-        _, data = pch("blender", "runs", "view", sid, data.get("run"), "--wait", "300",
-                      ok=(0, 1, 7), timeout=420)
+    run = (first or {}).get("run")
+    while data and (data.get("timed_out") or data.get("status") == "running") and run and time.time() < deadline:
+        try:
+            _, nxt = pch("blender", "runs", "view", sid, run, "--wait", "45", ok=(0, 1, 7), timeout=150)
+        except CloudError as e:
+            if not transient(e):
+                raise
+            time.sleep(5)
+            continue
+        if nxt:  # an empty answer: ask again
+            data = nxt
+        else:
+            time.sleep(3)
     return data
+
+
+def start(sid, kind, args, timeout):
+    """Start `pch blender run|exec` and follow it to its end. If the start itself drops, find the run that
+    began anyway (an exec by its exact command) before trying once more."""
+    t0 = time.time()
+    call = ["blender", kind, sid, "--timeout-s", timeout, "--wait", "20", *args]
+    try:
+        _, d = pch(*call, ok=(0, 1, 7), timeout=240)
+    except CloudError as e:
+        if not transient(e):
+            raise
+        time.sleep(3)
+        d = adopt(sid, kind, t0, args)
+        if d is None:
+            _, d = pch(*call, ok=(0, 1, 7), timeout=240)
+    return wait_run(sid, d, timeout)
+
+
+def adopt(sid, kind, since, args):
+    """The run this call started, if it started: same kind, begun since, and for an exec the same command.
+    A live run can't be told apart from another by its reply, so it's taken only when it's the one unread."""
+    from datetime import datetime
+    try:
+        _, d = pch("blender", "runs", "list", sid, timeout=60, retries=2)
+    except CloudError:
+        return None
+    found = []
+    for r in (d or {}).get("runs", []):
+        try:
+            ts = datetime.fromisoformat((r.get("started_at") or "").replace("Z", "+00:00")).timestamp()
+        except ValueError:
+            continue
+        if r.get("kind") == kind and ts >= since - 15 and not r.get("read"):
+            found.append(r)
+    want = args[0] if kind == "exec" and len(args) == 1 else None
+    for r in found:
+        try:
+            _, v = pch("blender", "runs", "view", sid, r["run"], "--wait", "0", ok=(0, 1, 7), timeout=60, retries=1)
+        except CloudError:
+            continue
+        v = v or {}
+        v.setdefault("run", r["run"])
+        if want is not None and v.get("command") == want:
+            return v
+        if kind == "run" and len(found) == 1:
+            return v
+    return None
 
 
 def cmd_run(o, st):
@@ -346,9 +427,11 @@ def cmd_run(o, st):
     if o.process:
         cmd = ["env", f"LD_LIBRARY_PATH={BLENDER_LIB}", "blender", "-b"] + ([blend] if blend else [])
         cmd += ["--factory-startup", "--python-exit-code", "1", "-P", rscript, "--", *argv]
-        _, d = pch("blender", "exec", sid, "--timeout-s", o.timeout, "--wait", o.timeout + 30, "--", *cmd,
-                   ok=(0, 1, 7), timeout=o.timeout + 120)
-        d = wait_run(sid, d, o.timeout)
+        # Blender's own log goes to a file: a long render's log can crowd the result out of the reply
+        log = f"{REMOTE_RUNS}/{time.strftime('%Y%m%d-%H%M%S')}-{os.getpid()}.log"
+        sh = (f"mkdir -p {REMOTE_RUNS} && {' '.join(shlex.quote(c) for c in cmd)} > {log} 2>&1; rc=$?; "
+              f"grep '^{MARK}' {log}; if [ $rc -ne 0 ]; then tail -n 30 {log} >&2; else rm -f {log}; fi; exit $rc")
+        d = start(sid, "exec", [sh], o.timeout)
         out = (d or {}).get("stdout") or ""
         js = [json.loads(l[len(MARK):]) for l in out.splitlines() if l.startswith(MARK)]
         res = {"code": (d or {}).get("exit_code", 1), "json": js, "error": None,
@@ -361,10 +444,7 @@ def cmd_run(o, st):
             code_f.write_text(LIVE, "utf-8")
             args_f.write_text(json.dumps({"script": "/work/" + rscript, "argv": argv, "mark": MARK,
                                           "skills": REMOTE_SKILLS, "lib": BLENDER_LIB}), "utf-8")
-            _, d = pch("blender", "run", sid, str(code_f), "--args", "@" + str(args_f),
-                       "--timeout-s", o.timeout, "--wait", o.timeout + 30, ok=(0, 1, 7),
-                       timeout=o.timeout + 120)
-        d = wait_run(sid, d, o.timeout)
+            d = start(sid, "run", [str(code_f), "--args", "@" + str(args_f)], o.timeout)
         res = (d or {}).get("result") or {"code": 1, "json": [], "error": (d or {}).get("stderr"),
                                           "tail": ((d or {}).get("stdout") or "").splitlines()[-20:]}
     info = {"session": sid, "mode": "process" if o.process else "live",
@@ -390,9 +470,7 @@ def cmd_expr(o, st):
     with tempfile.TemporaryDirectory(prefix="bas_expr_") as tmp:
         f = Path(tmp) / "args.json"
         f.write_text(json.dumps({"code": o.code}), "utf-8")
-        _, d = pch("blender", "run", sid, "-c", EXPR, "--args", "@" + str(f), "--timeout-s", o.timeout,
-                   "--wait", o.timeout + 30, ok=(0, 1, 7), timeout=o.timeout + 120)
-    d = wait_run(sid, d, o.timeout)
+        d = start(sid, "run", ["-c", EXPR, "--args", "@" + str(f)], o.timeout)
     r = (d or {}).get("result") or {}
     if r.get("stdout"):
         print(r["stdout"].rstrip())
@@ -403,6 +481,24 @@ def cmd_expr(o, st):
                           "stdout": ((d or {}).get("stdout") or "")[-2000:]}))
         return 1
     return 0
+
+
+def cmd_exec(o, st):
+    """A shell command in the session's /work (ffmpeg, unzip, a separate blender -b...), followed to its end."""
+    sid = session(o, st)
+    if not (o.command or o.args):
+        raise CloudError("exec needs a command: cloud.py exec \"ls -la\", or cloud.py exec -- prog args", 2)
+    before = snapshot(sid) if not o.no_pull else {}
+    d = start(sid, "exec", [o.command] if o.command else ["--", *o.args], o.timeout) or {}
+    info = {"session": sid, "spent": (d.get("cost") or {}).get("spent")}
+    if not o.no_pull:
+        info["pulled"], left = pull_changed(o, sid, before, snapshot(sid), o.pull_max_mb)
+        if left:
+            info["left_in_session"] = left
+    code = d.get("exit_code")
+    print(json.dumps({"ok": code == 0, "exit_code": code, "stdout": (d.get("stdout") or "")[-4000:],
+                      "stderr": (d.get("stderr") or "")[-2000:], "cloud": info}))
+    return 0 if code == 0 else 1
 
 
 def cmd_look(o, st):
@@ -476,6 +572,37 @@ def cmd_pull(o, st):
     return 0 if got else 1
 
 
+def cmd_fork(o, st):
+    """Copies of a session as it is now (files and scene; Python's variables start fresh), to try things
+    side by side. Each runs, and costs, on its own: pass --session <id> to use one, and stop each."""
+    sid = session(o, st)
+    a = ["blender", "session", "fork", sid, "--count", o.count, "--wait", "120"]
+    if o.name:
+        a += ["--name", o.name]
+    _, d = pch(*a, ok=(0, 7), timeout=600)
+    ids = []
+
+    def walk(x):
+        if isinstance(x, dict):
+            if isinstance(x.get("id"), str) and x["id"].startswith("ses_") and x["id"] != sid:
+                ids.append(x["id"])
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+    walk(d)
+    ids = list(dict.fromkeys(ids))
+    synced = st.setdefault("synced", {})
+    for f in ids:  # a fork has its parent's files, skills included
+        if sid in synced:
+            synced[f] = synced[sid]
+    save_state(o.dir, st)
+    print(json.dumps({"ok": bool(ids), "parent": sid, "forks": ids,
+                      "next": "cloud.py --session <fork> run ...; stop each with cloud.py --session <fork> stop"}))
+    return 0 if ids else 1
+
+
 def cmd_start(o, st):
     sid = start_session(o, st)
     sync_skills(o, sid, st)
@@ -501,8 +628,10 @@ def cmd_stop(o, st):
         print(json.dumps({"ok": True, "note": "no session saved here"}))
         return 0
     _, s = pch("blender", "session", "stop", sid, timeout=120)
+    st.get("synced", {}).pop(sid, None)
     if st.get("session") == sid:
-        (o.dir / STATE).unlink(missing_ok=True)
+        st.pop("session", None)
+    save_state(o.dir, st)
     print(json.dumps({"ok": True, "session": sid, "state": (s or {}).get("state"),
                       "spent": ((s or {}).get("cost") or {}).get("spent")}))
     return 0
@@ -532,6 +661,10 @@ def parse(argv):
     r.add_argument("--upload", action="append", help="also send this file/folder (textures a .blend needs)")
     r.add_argument("--no-pull", action="store_true")
     r.add_argument("--pull-max-mb", type=float, default=500)
+    x = sp.add_parser("exec")
+    x.add_argument("command", nargs="?", help="one string for bash; or put the program and its args after --")
+    x.add_argument("--no-pull", action="store_true")
+    x.add_argument("--pull-max-mb", type=float, default=500)
     e = sp.add_parser("expr")
     e.add_argument("code")
     lk = sp.add_parser("look")
@@ -550,6 +683,8 @@ def parse(argv):
     rd.add_argument("--max-cost")
     for n in ("push", "pull"):
         sp.add_parser(n).add_argument("paths", nargs="+")
+    fk = sp.add_parser("fork")
+    fk.add_argument("--count", type=int, default=1)
     s = sp.add_parser("start")
     s.add_argument("--size", choices=["small", "medium", "large"])
     s.add_argument("--gpu", choices=["l4", "l40s"])

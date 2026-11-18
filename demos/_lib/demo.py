@@ -14,6 +14,7 @@ Env: BAS_SESSION (a session to use, else one per demo, saved in work/.cloud-blen
 BAS_RENDER_SESSION (a GPU session for d.render; without it d.render uses `cloud.py render`, a GPU job),
 PCH / PCH_ENV / PCH_CONFIG as for pch.
 """
+import atexit
 import json
 import os
 import shlex
@@ -42,6 +43,13 @@ class Demo:
         self.session = os.environ.get("BAS_SESSION")
         self.render_session = os.environ.get("BAS_RENDER_SESSION")
         self.log, self.t0, self.spent = [], time.time(), {}
+        self.finished = False
+        if not os.environ.get("BAS_KEEP_SESSION"):
+            atexit.register(self._stop_on_exit)  # a run that dies halfway mustn't leave its session running
+
+    def _stop_on_exit(self):
+        if not self.finished and self.session and self.session != self.render_session:
+            self.cloud("stop", quiet=True, check=False)
 
     # ------------------------------------------------------------ calls
 
@@ -52,6 +60,8 @@ class Demo:
         s = session or self.session
         if s:
             cmd += ["--session", s]
+        else:
+            cmd += ["--name", f"{self.skill_name} demo"]  # how it shows at patch.gg/blender
         cmd += [str(a) for a in args]
         t = time.time()
         p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
@@ -170,15 +180,10 @@ class Demo:
         return {"clip": out / "clip.mp4", "poster": out / f"frame_{pf:04d}.png"}
 
     def _exec_box(self, command, box):
-        exe = os.environ.get("PCH") or shutil.which("pch") or "pch"
-        p = subprocess.run([exe, "--json", "blender", "exec", self.render_session, command, "--timeout-s", "600",
-                            "--wait", "620"], capture_output=True, text=True, encoding="utf-8", errors="replace")
-        try:
-            d = json.loads(p.stdout)
-        except ValueError:
-            d = {}
-        if p.returncode or d.get("exit_code"):
-            raise DemoError(f"box command failed: {command[:80]}: {(d.get('stderr') or p.stderr)[-800:]}")
+        d = self.cloud("--timeout", 900, "exec", "--no-pull", command, session=self.render_session, dir_=box,
+                       quiet=True, check=False)
+        if not d.get("ok"):
+            raise DemoError(f"box command failed: {command[:80]}: {d.get('stderr') or d.get('error') or d}")
         return d
 
     # ------------------------------------------------------------ media
@@ -211,6 +216,7 @@ class Demo:
         return out
 
     def finish(self, numbers, stop=True, prompt=None):
+        self.finished = True
         if stop and self.session and self.session != self.render_session:
             r = self.cloud("stop", quiet=True, check=False)
             if r.get("spent") is not None:

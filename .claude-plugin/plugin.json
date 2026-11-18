@@ -1,10 +1,31 @@
 {
-  "name": "blender-agent-skills",
-  "version": "1.3.2",
-  "description": "Professional Blender 5.3 workflows for AI agents: modeling, retopo/UV, PBR, texturing, baking, rigging, animation, clothing, hair, environments, toon/NPR, optimization, export (Roblox/Unity/Unreal/Godot/web), rendering, video, time of day, weather, simulation, QA.",
-  "author": { "name": "EL4CTEO" },
-  "homepage": "https://github.com/EL4CTEO/blender-skills",
-  "repository": "https://github.com/EL4CTEO/blender-skills",
+  "name": "cloud-blender-skills",
+  "version": "1.0.0",
+  "description": "29 Blender skills for coding agents, in your own Blender or on Patch's cloud Blender with nothing to install: modeling, retopo/UV, PBR, texturing, baking, rigging, animation, clothing, hair, environments, toon/NPR, optimization, export (Roblox/Unity/Unreal/Godot/web), rendering, video, time of day, weather, simulation, QA. Based on EL4CTEO/blender-skills.",
+  "author": {
+    "name": "Patch",
+    "url": "https://patch.gg"
+  },
+  "homepage": "https://patch.gg/rehan/cloud-blender-skills",
+  "repository": "https://github.com/patch-gg/cloud-blender-skills",
   "license": "MIT",
-  "keywords": ["blender", "bpy", "3d", "game-assets", "rigging", "pbr", "texturing", "hair", "terrain", "toon", "roblox", "unity", "unreal", "godot"]
+  "keywords": [
+    "3d",
+    "blender",
+    "bpy",
+    "cloud",
+    "game-assets",
+    "godot",
+    "gpu-rendering",
+    "hair",
+    "patch",
+    "pbr",
+    "rigging",
+    "roblox",
+    "terrain",
+    "texturing",
+    "toon",
+    "unity",
+    "unreal"
+  ]
 }

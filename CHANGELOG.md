@@ -1,5 +1,17 @@
 # Changelog
 
+## cloud-blender-skills [1.0.0] - 2026-11-18
+Based on blender-skills 1.3.2. Every skill now runs on Patch's cloud Blender, and each has a demo made there.
+- New skill `blender-cloud` and `cloud.py`: live cloud sessions through `pch` (run, expr, exec, look, render,
+  fork, push, pull, status, stop), files up and back by themselves, GPU renders, costs.
+- `run_in_blender.py --cloud` and `run_tests.py --cloud` (72 pass on the cloud; camera tracking needs a window and
+  skips there, as it does with `BAS_NO_WINDOW=1`).
+- `render_batch.py`: OpenImageDenoise on the GPU and persistent data for GPU renders (a 720p Cycles frame on an L40S
+  went from 5.5 s to 0.4 s); no OptiX denoiser, which fails where the driver's weights file is missing; a retry after a
+  failed render no longer renders black; reports the movie file Blender actually writes.
+- `export_asset.py`: the `web` preset works on Blender 5.2.0, which can't load its own meshopt encoder on Linux.
+- `demos/`: one demo per skill, with the commands that ran (`demos/AUTHORING.md` says how to make one).
+
 ## [1.3.2] - 2026-11-17
 - `rig_check`: no longer crashes with `slice steps not supported` on skinned meshes with 4000+ vertices (#11, thanks @JairAgu).
 

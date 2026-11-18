@@ -27,6 +27,7 @@ Add `--cloud` to any headless call from blender-core; every other flag stays the
 python <skills_dir>/blender-core/scripts/run_in_blender.py --cloud [--blend in.blend] <script.py> -- <args>
 python <skills_dir>/blender-cloud/scripts/cloud.py run [--blend in.blend] [--process] <script.py> -- <args>
 python <skills_dir>/blender-cloud/scripts/cloud.py expr "import bpy; print(len(bpy.data.objects))"
+python <skills_dir>/blender-cloud/scripts/cloud.py exec "ffmpeg -framerate 24 -i render/f_%04d.png clip.mp4"
 ```
 - **One live scene.** The first call starts a session and keeps its id in `.cloud-blender.json` in this
   folder; later calls reuse it, so the scene builds up between calls, as in an MCP session. `--blend`
@@ -36,6 +37,9 @@ python <skills_dir>/blender-cloud/scripts/cloud.py expr "import bpy; print(len(b
   place relative to this folder (from outside it, to `/work/_in/<name>`). Files the call writes come
   back to the same place here; `--no-pull` skips that, and anything past 500 MB stays in the session.
   A .blend's textures: pack them, or `--upload textures/`. `cloud.py push|pull PATH...` by hand.
+- **Try things side by side.** `cloud.py fork --count 3` copies the session as it is now (scene and files;
+  Python's variables start fresh) into new sessions; run a different take in each with `--session`, keep
+  the best and stop the rest. Each copy costs credits on its own.
 - Your own bpy files run the same way: `cloud.py run script.py`. Print `@@JSON@@{...}` to return data.
 - It prints the script's JSON with a `"cloud"` key: the session, credits `spent` so far, files `pulled`.
 

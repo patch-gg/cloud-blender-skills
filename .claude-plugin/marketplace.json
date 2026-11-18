@@ -1,12 +1,14 @@
 {
-  "name": "blender-agent-skills",
-  "description": "Blender 5.3 workflow skills for AI agents",
-  "owner": { "name": "EL4CTEO" },
+  "name": "cloud-blender-skills",
+  "description": "Blender skills for AI agents, local or on Patch's cloud Blender",
+  "owner": {
+    "name": "Patch"
+  },
   "plugins": [
     {
-      "name": "blender-agent-skills",
+      "name": "cloud-blender-skills",
       "source": "./",
-      "description": "28 tested Blender skills: model, UV, texture, bake, rig, animate, clothe, groom, build environments, toon, optimize, export, render, edit video, weather, QA"
+      "description": "29 tested Blender skills, in your Blender or on Patch's cloud Blender: model, UV, texture, bake, rig, animate, clothe, groom, build environments, toon, optimize, export, render, edit video, weather, QA"
     }
   ]
 }
