@@ -17,8 +17,9 @@ The execution model is in `blender-core`. Start from `assets/addon_template/` (v
 3. Validate and build:
    ```
    blender --command extension validate ./my_tool
-   blender --command extension build --source-dir ./my_tool --output-dir ./dist
+   mkdir -p dist && blender --command extension build --source-dir ./my_tool --output-dir ./dist   # dist must exist
    blender --command extension install-file -r user_default -e ./dist/my_tool-1.0.0.zip
+   # install-file exits 0 even when it fails: check its output says "Installed"
    ```
 4. Test headless: register the package in-process, call operators with `temp_override`, and assert on data (see `tests/test_addon.py` in this repo).
 

@@ -56,7 +56,9 @@ def build_tree():
     gi, go = N("NodeGroupInput"), N("NodeGroupOutput")
     I = gi.outputs  # noqa: E741
     dist = N("GeometryNodeDistributePointsOnFaces", distribute_method="POISSON")
-    L(I["Geometry"], dist.inputs["Mesh"])
+    sep_c = N("GeometryNodeSeparateComponents")  # the mesh only: earlier layers' instances would get points too
+    L(I["Geometry"], sep_c.inputs[0])
+    L(sep_c.outputs["Mesh"], dist.inputs["Mesh"])
     L(I["Density"], dist.inputs["Density Max"])
     L(I["Distance Min"], dist.inputs["Distance Min"])
     L(I["Mask"], dist.inputs["Density Factor"])
@@ -177,7 +179,8 @@ def run(target=None, collection=None, density=0.1, min_distance=1.0, max_slope=3
         res["tris_total"] = sum(len(p.vertices) - 2 for p in me.polygons)
         tgt.evaluated_get(bpy.context.evaluated_depsgraph_get()).to_mesh_clear()
         return res
-    inst = _instances(tgt)
+    own = {o.name for o in coll.all_objects}  # only this layer: other layers' modifiers instance on tgt too
+    inst = [i for i in _instances(tgt) if i[1] in own]
     res["instances"] = len(inst)
     res["by_source"] = {}
     for _m, src in inst:

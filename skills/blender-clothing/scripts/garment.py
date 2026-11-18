@@ -75,6 +75,11 @@ def _transfer_weights(garment, body, max_inf):
     with bpy.context.temp_override(object=garment, active_object=garment):
         bpy.ops.object.modifier_move_to_index(modifier=dt.name, index=0)
         bpy.ops.object.modifier_apply(modifier=dt.name)
+        arm = next((m.object for m in body.modifiers if m.type == "ARMATURE" and m.object), None)
+        if arm:  # skin weights only: a region group (--group Torso) would be limited and normalized in with them
+            bones = {b.name for b in arm.data.bones if b.use_deform}
+            for vg in [vg for vg in garment.vertex_groups if vg.name not in bones]:
+                garment.vertex_groups.remove(vg)
         bpy.ops.object.vertex_group_limit_total(group_select_mode="ALL", limit=max_inf)
         bpy.ops.object.vertex_group_normalize_all(group_select_mode="ALL", lock_active=False)
         bpy.ops.object.vertex_group_clean(group_select_mode="ALL", limit=0.001)

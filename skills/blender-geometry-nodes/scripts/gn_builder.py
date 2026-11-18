@@ -33,6 +33,15 @@ SOCK = {k: f"NodeSocket{v}" for k, v in {
     "COLLECTION": "Collection", "MATERIAL": "Material", "IMAGE": "Image", "ROTATION": "Rotation",
     "MATRIX": "Matrix", "MENU": "Menu", "SHADER": "Shader", "BUNDLE": "Bundle", "CLOSURE": "Closure"}.items()}
 TREE = {"geometry": "GeometryNodeTree", "shader": "ShaderNodeTree", "compositor": "CompositorNodeTree"}
+IDS = {"OBJECT": "objects", "COLLECTION": "collections", "MATERIAL": "materials", "IMAGE": "images",
+       "TEXTURE": "textures"}
+
+
+def _id(kind, v):
+    """A value for a socket of type `kind`: a name given for an object/collection/material/image socket
+    becomes that datablock (the RNA only takes the datablock itself)."""
+    coll = IDS.get((kind or "").upper())
+    return getattr(bpy.data, coll).get(v, v) if coll and isinstance(v, str) else v
 
 
 def describe(types):
@@ -94,7 +103,7 @@ def build(spec):
             for item in spec.get(key, []):
                 s = nt.interface.new_socket(item[0], in_out=io, socket_type=SOCK[item[1].upper()])
                 if len(item) > 2 and item[2] is not None and hasattr(s, "default_value"):
-                    s.default_value = item[2]
+                    s.default_value = _id(item[1], item[2])
                 for k, v in (item[3] if len(item) > 3 else {}).items():
                     setattr(s, {"min": "min_value", "max": "max_value"}.get(k, k), v)
         if kind == "geometry":
@@ -124,7 +133,7 @@ def build(spec):
         val = [val] if isinstance(val, str) else val
         for k, v in (val[2] if len(val) > 2 else {}).items():
             s = _sock(nodes, f"{key}.{k}", outputs=False)
-            s.default_value = bpy.data.objects.get(v, v) if isinstance(v, str) and s.type == "OBJECT" else v
+            s.default_value = _id(s.type, v)
     for a, b in spec.get("links", []):
         nt.links.new(_sock(nodes, a, True), _sock(nodes, b, False))
     _layout(nt)
@@ -154,13 +163,13 @@ def apply(nt, ob_name, values):
     mod = next((m for m in ob.modifiers if m.type == "NODES" and m.node_group == nt), None) \
         or ob.modifiers.new(nt.name, "NODES")
     mod.node_group = nt
-    ids = {i.name: i.identifier for i in nt.interface.items_tree if getattr(i, "in_out", "") == "INPUT"}
+    ins = {i.name: i for i in nt.interface.items_tree if getattr(i, "in_out", "") == "INPUT"}
     for k, v in values.items():
-        item = getattr(mod.properties.inputs, ids[k])
+        item = getattr(mod.properties.inputs, ins[k].identifier)
         if isinstance(v, str) and v.startswith("@"):  # @attr_name -> read from attribute
             item.type, item.attribute_name = "ATTRIBUTE", v[1:]
         else:
-            item.value = bpy.data.objects.get(v, v) if isinstance(v, str) else v
+            item.value = _id(ins[k].socket_type.replace("NodeSocket", ""), v)
     return mod
 
 

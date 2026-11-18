@@ -71,7 +71,7 @@ def _backdrop(lo, hi, col):
     bev.width, bev.segments, bev.limit_method = w * 0.25, 16, "ANGLE"
     for p in me.polygons:
         p.use_smooth = True
-    mat = bpy.data.materials.new(PREFIX + "Backdrop")
+    mat = bpy.data.materials.get(PREFIX + "Backdrop") or bpy.data.materials.new(PREFIX + "Backdrop")  # re-runs reuse it
     bsdf = bx.node(mat.node_tree, "BSDF_PRINCIPLED")
     bsdf.inputs["Base Color"].default_value = (0.18, 0.18, 0.18, 1)  # 18% grey
     bsdf.inputs["Roughness"].default_value = 0.8

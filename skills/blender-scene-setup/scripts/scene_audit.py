@@ -10,7 +10,7 @@ import re
 import sys
 
 import bpy
-from mathutils import Matrix, Vector
+from mathutils import Matrix, Quaternion, Vector
 
 sys.path.insert(0, os.path.dirname(__file__))
 import _bpyx as bx  # noqa: E402
@@ -21,14 +21,28 @@ DEFAULT_NAME = re.compile(r"^(Cube|Plane|Sphere|Cylinder|Cone|Torus|Suzanne|Circ
 EPS = 1e-4
 
 
+def _rotation(ob):
+    """The rotation the object really uses: glTF imports rotate with quaternions, and then
+    rotation_euler is a stale value Blender ignores."""
+    if ob.rotation_mode == "QUATERNION":
+        return ob.rotation_quaternion.to_euler()
+    if ob.rotation_mode == "AXIS_ANGLE":
+        a = ob.rotation_axis_angle
+        return Quaternion(a[1:], a[0]).to_euler()
+    return ob.rotation_euler
+
+
 def _apply_rot_scale(ob):
     if ob.type != "MESH" or ob.data.users > 1:
         return False
     loc, rot, sca = ob.matrix_basis.decompose()
-    ob.data.transform(Matrix.LocRotScale(None, rot, sca))
+    m = Matrix.LocRotScale(None, rot, sca)
+    ob.data.transform(m)
+    if m.determinant() < 0:  # a mirror (negative scale) leaves the faces inside out: flip them back
+        ob.data.flip_normals()
     ob.matrix_basis = Matrix.Translation(loc)
     for c in ob.children:  # keep children in place
-        c.matrix_parent_inverse = Matrix.LocRotScale(None, rot, sca) @ c.matrix_parent_inverse
+        c.matrix_parent_inverse = m @ c.matrix_parent_inverse
     return True
 
 
@@ -48,7 +62,7 @@ def run(objects=None, fix=None, **_):
                 issues["unapplied_scale"].append(ob.name)
             if s.x * s.y * s.z < 0:
                 issues["negative_scale"].append(ob.name)
-            if ob.type == "MESH" and any(abs(v) > EPS for v in ob.rotation_euler):
+            if ob.type == "MESH" and any(abs(v) > EPS for v in _rotation(ob)):
                 issues["rotated"].append(ob.name)
         if DEFAULT_NAME.match(ob.name):
             issues["default_names"].append(ob.name)

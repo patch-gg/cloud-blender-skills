@@ -86,19 +86,25 @@ class _G:
 def build_group():
     ng = bpy.data.node_groups.get(GROUP) or bpy.data.node_groups.new(GROUP, "ShaderNodeTree")
     ng.nodes.clear()
-    ng.interface.clear()
-    for nm, kind, d in (("Base Color", "Color", (0.8, 0.8, 0.8, 1)), ("Roughness", "Float", 0.5),
-                        ("Metallic", "Float", 0.0), ("Curvature", "Float", 0.5), ("AO", "Float", 1.0),
-                        ("Wear", "Float", 0.0), ("Grime", "Float", 0.0), ("Dust", "Float", 0.0),
-                        ("Rust", "Float", 0.0), ("Breakup", "Float", 0.3), ("Scale", "Float", 0.1),
-                        ("Under Color", "Color", (0.27, 0.28, 0.29, 1)), ("Under Metallic", "Float", 1.0),
-                        ("Under Roughness", "Float", 0.35), ("Grime Color", "Color", (0.04, 0.03, 0.02, 1)),
-                        ("Dust Color", "Color", (0.45, 0.4, 0.33, 1))):
-        s = ng.interface.new_socket(nm, in_out="INPUT", socket_type=f"NodeSocket{kind}")
-        s.default_value = d
-    for nm, kind in (("Base Color", "Color"), ("Roughness", "Float"), ("Metallic", "Float"),
-                     ("Wear Mask", "Float")):
-        ng.interface.new_socket(nm, in_out="OUTPUT", socket_type=f"NodeSocket{kind}")
+    ins = (("Base Color", "Color", (0.8, 0.8, 0.8, 1)), ("Roughness", "Float", 0.5),
+           ("Metallic", "Float", 0.0), ("Curvature", "Float", 0.5), ("AO", "Float", 1.0),
+           ("Wear", "Float", 0.0), ("Grime", "Float", 0.0), ("Dust", "Float", 0.0),
+           ("Rust", "Float", 0.0), ("Breakup", "Float", 0.3), ("Scale", "Float", 0.1),
+           ("Under Color", "Color", (0.27, 0.28, 0.29, 1)), ("Under Metallic", "Float", 1.0),
+           ("Under Roughness", "Float", 0.35), ("Grime Color", "Color", (0.04, 0.03, 0.02, 1)),
+           ("Dust Color", "Color", (0.45, 0.4, 0.33, 1)))
+    outs = (("Base Color", "Color"), ("Roughness", "Float"), ("Metallic", "Float"), ("Wear Mask", "Float"))
+    want = ([(nm, "INPUT", f"NodeSocket{kind}") for nm, kind, _ in ins]
+            + [(nm, "OUTPUT", f"NodeSocket{kind}") for nm, kind in outs])
+    have = sorted([(s.name, s.in_out, s.socket_type) for s in ng.interface.items_tree if s.item_type == "SOCKET"],
+                  key=lambda t: t[1] != "INPUT")  # inputs first, each side in its own order
+    if have != want:  # new sockets would unlink and reset every material an earlier call set up
+        ng.interface.clear()
+        for nm, kind, d in ins:
+            s = ng.interface.new_socket(nm, in_out="INPUT", socket_type=f"NodeSocket{kind}")
+            s.default_value = d
+        for nm, kind in outs:
+            ng.interface.new_socket(nm, in_out="OUTPUT", socket_type=f"NodeSocket{kind}")
     g = _G(ng)
     gi, go = g.n("NodeGroupInput"), g.n("NodeGroupOutput")
     I = gi.outputs  # noqa: E741

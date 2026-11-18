@@ -77,7 +77,10 @@ class _G:
 
 
 def build_group():
-    ng = bpy.data.node_groups.get(GROUP) or bpy.data.node_groups.new(GROUP, "ShaderNodeTree")
+    ng = bpy.data.node_groups.get(GROUP)
+    if ng is not None and ng.nodes:  # reuse: rebuilding drops every material's links to it, not only ours
+        return ng
+    ng = ng or bpy.data.node_groups.new(GROUP, "ShaderNodeTree")
     ng.nodes.clear()
     ng.interface.clear()
     for nm, kind, d in (("Base Color", "Color", (0.8, 0.8, 0.8, 1)), ("Roughness", "Float", 0.5),
@@ -183,6 +186,12 @@ def build_group():
     return ng
 
 
+def _out(node, ident):
+    """Output socket by identifier: outputs[...] matches names, and a Mix node names all of its outputs
+    'Result' (Result_Float, Result_Color, ...)."""
+    return next(s for s in node.outputs if s.identifier == ident)
+
+
 def _src(sock):
     if sock.is_linked:
         lk = sock.links[0]
@@ -202,12 +211,12 @@ def _apply_mat(mat, ng, vals):
             gn = nt.nodes.new("ShaderNodeGroup")
             gn.name, gn.label, gn.node_tree = gname, "ENV Weather", ng
             gn.location = bsdf.location.x - 260, bsdf.location.y
-        # (re)wire on every run: re-running rebuilds the group, which recreates its sockets and drops links
+        # (re)wire on every run (a group from an older file may have been rebuilt)
         for k, src in record[bsdf.name].items():
             if k == "Coat Normal":  # restore-only; the group derives it
                 continue
             if "node" in src and src["node"] in nt.nodes:
-                nt.links.new(nt.nodes[src["node"]].outputs[src["out"]], gn.inputs[k])
+                nt.links.new(_out(nt.nodes[src["node"]], src["out"]), gn.inputs[k])
             elif k == "Normal":  # unlinked = shading normal; an unlinked group vector would be (0,0,0)
                 geo = nt.nodes.get(TAG + "geo_" + bsdf.name) or nt.nodes.new("ShaderNodeNewGeometry")
                 geo.name = TAG + "geo_" + bsdf.name
@@ -234,7 +243,7 @@ def _remove_mat(mat):
             for lk in list(s.links):
                 nt.links.remove(lk)
             if "node" in src and src["node"] in nt.nodes:
-                nt.links.new(nt.nodes[src["node"]].outputs[src["out"]], s)
+                nt.links.new(_out(nt.nodes[src["node"]], src["out"]), s)
             elif "value" in src:
                 s.default_value = src["value"]
     for n in [n for n in nt.nodes if n.name.startswith(TAG)]:
@@ -244,7 +253,10 @@ def _remove_mat(mat):
 
 
 def _snow_tree():
-    ng = bpy.data.node_groups.get(SNOW_GN) or bpy.data.node_groups.new(SNOW_GN, "GeometryNodeTree")
+    ng = bpy.data.node_groups.get(SNOW_GN)
+    if ng is not None and ng.nodes:  # reuse: rebuilding resets the inputs of earlier calls' modifiers
+        return ng
+    ng = ng or bpy.data.node_groups.new(SNOW_GN, "GeometryNodeTree")
     ng.nodes.clear()
     ng.interface.clear()
     ng.is_modifier = True

@@ -11,6 +11,33 @@ Based on blender-skills 1.3.2. Every skill now runs on Patch's cloud Blender, an
   failed render no longer renders black; reports the movie file Blender actually writes.
 - `export_asset.py`: the `web` preset works on Blender 5.2.0, which can't load its own meshopt encoder on Linux.
 - `demos/`: one demo per skill, with the commands that ran (`demos/AUTHORING.md` says how to make one).
+- Fixes found by running every skill on the cloud for its demo:
+  - `retarget.py`: the auto bone map reads the names Rigify really generates (hips, neck and head from the ends of
+    the spine chain; `pelvis.L/.R` helpers skipped). Before, a Rigify game skeleton got no hip travel and its head
+    took the chest's rotation.
+  - `rigify_build.py`: `--fit` applies the metarig's location too, so the generated rig no longer sits off the mesh.
+  - `stress_poses.py`: the spine twist uses Rigify's `spine_fk.002`; `.001` is on the hips side and turned the body.
+  - `bind_mesh.py`: vertices bone heat misses (eyelash cards, buttons; under the 2% proxy threshold) take the weights
+    of their nearest weighted vertex instead of staying behind in every pose.
+  - `garment.py`: region groups such as `--group Torso` no longer get normalised in with the skin weights (bone
+    weights summed to about 0.5 and the region used one of the 4 influences).
+  - `smart_material.py`, `toon_setup.py`, `surface_weather.py`: a second call no longer unlinks or resets the
+    materials an earlier call set up (their shared node groups keep matching sockets).
+  - `lightning.py`: the bolt is hidden between flashes; unlit, it rendered black against a lit sky.
+  - `scatter.py`: each layer scatters on the mesh only, not on earlier layers' instances, and counts its own.
+  - `scene_audit.py`: `--fix scale` flips mirrored meshes back outside out, and the rotation check reads the rotation
+    mode an object uses (glTF imports are quaternions).
+  - `auto_retopo.py`: collapses the tiny edges that made QuadriFlow cancel without a word, and stops preserving voxel
+    steps as sharp edges (minutes of stalling became 1.6 s on a detailed creature).
+  - `gn_builder.py`: collection, material and image sockets take a name, as object sockets already did.
+  - `export_asset.py`: hidden members (`make_lods.py` hides LOD1+) are exported instead of silently dropped.
+  - `build_pbr_material.py`: makes the glTF add-on's own "glTF Material Output" group, so its importer finds every
+    socket it expects.
+  - `review_shots.py`, `vse_edit.py`: `//` outputs work in an unsaved scene (a cloud session, `blender -b` with no
+    file); `vse_edit.py` rendered nothing there.
+  - `turntable.py`: re-runs reuse the backdrop material instead of adding `LD_Backdrop.001`, `.002`...
+  - `blender-addon-development`: `extension build --output-dir` needs the folder to exist, and `install-file` exits 0
+    even when it fails.
 
 ## [1.3.2] - 2026-11-17
 - `rig_check`: no longer crashes with `slice steps not supported` on skinned meshes with 4000+ vertices (#11, thanks @JairAgu).

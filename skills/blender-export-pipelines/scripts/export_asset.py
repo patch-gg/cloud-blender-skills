@@ -159,6 +159,9 @@ def run(preset="gltf", objects=None, collection=None, out="", batch=False, no_an
         jobs.append((out, obs, None))
     files = []
     for path, members, root in jobs:
+        hidden = [m for m in members if m.hide_get()]  # hidden objects can't be selected, so use_selection
+        for m in hidden:                                # dropped them (make_lods.py hides LOD1+)
+            m.hide_set(False)
         bx.select_only(members, active=members[0])
         loc = None
         if root is not None:
@@ -169,6 +172,8 @@ def run(preset="gltf", objects=None, collection=None, out="", batch=False, no_an
         finally:
             if loc is not None:
                 root.location = loc
+            for m in hidden:
+                m.hide_set(True)
         rec = {"file": path, "ok": res == {"FINISHED"} and os.path.exists(path),
                "kb": round(os.path.getsize(path) / 1024, 1) if os.path.exists(path) else 0,
                "objects": [m.name for m in members]}

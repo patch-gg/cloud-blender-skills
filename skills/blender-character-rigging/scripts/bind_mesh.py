@@ -2,7 +2,8 @@
 
 Methods: auto (bone heat), proxy (voxel-remeshed manifold proxy gets heat weights, transferred
 back - use for non-manifold/AI/kitbashed meshes or when heat fails), envelope, empty (groups only).
-auto falls back to proxy when heat weighting leaves verts unweighted.
+auto falls back to proxy when heat weighting leaves over 2% of the verts unweighted; any fewer it
+missed take the weights of their nearest weighted vert.
 Cleanup: remove weights < --clean, limit to --limit influences, normalize.
 Usage:
   blender -b f.blend -P bind_mesh.py -- --armature RIG --meshes Body Head [--method auto|proxy|envelope|empty]
@@ -62,6 +63,27 @@ def _proxy_weights(ob, arm):
     bpy.data.objects.remove(proxy)
 
 
+def _fill_nearest(ob, arm):
+    """Verts bone heat missed (eyelash cards, buttons) take the weights of the nearest weighted vert."""
+    from mathutils.kdtree import KDTree
+    deform = {b.name for b in arm.data.bones if b.use_deform}
+    gi = {g.index for g in ob.vertex_groups if g.name in deform}
+    verts = ob.data.vertices
+    good = [v for v in verts if any(g.group in gi and g.weight > 1e-4 for g in v.groups)]
+    bad = [v.index for v in verts if not any(g.group in gi and g.weight > 1e-4 for g in v.groups)]
+    if not good or not bad:
+        return 0
+    kd = KDTree(len(good))
+    for i, v in enumerate(good):
+        kd.insert(v.co, i)
+    kd.balance()
+    for i in bad:
+        _, j, _ = kd.find(verts[i].co)
+        for g in [(g.group, g.weight) for g in good[j].groups if g.group in gi and g.weight > 1e-4]:
+            ob.vertex_groups[g[0]].add([i], g[1], "REPLACE")
+    return len(bad)
+
+
 def cleanup(ob, limit=4, clean=0.01):
     if not ob.vertex_groups:
         return
@@ -84,16 +106,20 @@ def run(armature=None, meshes=None, method="auto", limit=4, clean=0.01, **_):
         _parent(obs, arm, kind)
     for ob in obs:
         used = method
+        filled = 0
         if method == "proxy" or (method == "auto" and unweighted(ob, arm) > 0.02 * len(ob.data.vertices)):
             used = "proxy"
             _proxy_weights(ob, arm)
             if not any(m.type == "ARMATURE" for m in ob.modifiers):
                 _parent([ob], arm, "ARMATURE_NAME")
+        if method in ("auto", "proxy"):  # a few verts left over would stay behind in every pose
+            filled = _fill_nearest(ob, arm)
         if method != "empty":
             cleanup(ob, limit, clean)
         mx = max((sum(1 for g in v.groups if g.weight > 1e-4) for v in ob.data.vertices), default=0)
         report[ob.name] = {"method": used, "groups": len(ob.vertex_groups),
-                           "unweighted_verts": unweighted(ob, arm), "max_influences": mx}
+                           "unweighted_verts": unweighted(ob, arm), "filled_from_nearest": filled,
+                           "max_influences": mx}
     bx.select_only([arm])
     return {"ok": True, "armature": arm.name, "meshes": report}
 

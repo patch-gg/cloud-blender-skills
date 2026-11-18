@@ -66,7 +66,8 @@ def _add_clip(sed, path, channel, start, fps, still_seconds):
 
 
 def _output(sc, out):
-    path = bpy.path.abspath(out)
+    # unsaved file: abspath leaves "//edit.mp4" as "edit.mp4", and the renderer writes nothing; anchor it to the cwd
+    path = os.path.abspath(bpy.path.abspath(out))
     st = sc.render.image_settings
     if path.lower().endswith((".mp4", ".mov", ".mkv")):
         st.media_type = "VIDEO"  # 5.0+: set the media type before the file format

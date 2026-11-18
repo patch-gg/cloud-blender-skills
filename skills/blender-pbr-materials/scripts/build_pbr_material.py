@@ -92,6 +92,11 @@ def _gltf_output_group():
     name = "glTF Material Output"
     g = bpy.data.node_groups.get(name)
     if g is None:
+        try:  # the glTF add-on's own group: its importer reuses one by this name and needs all its sockets
+            from io_scene_gltf2.blender.com.material_helpers import create_settings_group
+            return create_settings_group(name)
+        except ImportError:
+            pass
         g = bpy.data.node_groups.new(name, "ShaderNodeTree")
         g.interface.new_socket("Occlusion", in_out="INPUT", socket_type="NodeSocketFloat")
         g.nodes.new("NodeGroupOutput")

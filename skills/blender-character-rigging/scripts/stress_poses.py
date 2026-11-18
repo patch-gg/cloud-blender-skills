@@ -25,7 +25,9 @@ ROLES = {  # role -> regex (searched in order of preference: fk controls first)
     "forearm": r"^(forearm_fk|forearm|lowerarm|(left|right)lowerarm|(left|right)forearm|mixamorig:(left|right)forearm)",
     "thigh": r"^(thigh_fk|thigh|upperleg|upleg|(left|right)upperleg|(left|right)upleg|mixamorig:(left|right)upleg)",
     "shin": r"^(shin_fk|shin|calf|lowerleg|leg|(left|right)lowerleg|(left|right)leg|mixamorig:(left|right)leg)",
-    "spine": r"^(torso|spine_fk\.001|spine\.002|spine_02|spine2|uppertorso|mixamorig:spine1)$",
+    # Rigify: spine_fk.002 is the first FK bone above the spine's pivot (.001 is on the hips side and
+    # would turn the legs with it, so the waist never twists)
+    "spine": r"^(torso|spine_fk\.002|spine\.002|spine_02|spine2|uppertorso|mixamorig:spine1)$",
     "head": r"^(head|mixamorig:head)$",
 }
 

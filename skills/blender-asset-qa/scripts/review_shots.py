@@ -39,7 +39,8 @@ def run(objects=None, out="", views=None, mode="solid", res=512, **_):
         raise ValueError("nothing to render")
     views = views or ["front", "right", "top", "three_quarter"]
     sc = bpy.context.scene
-    out = bpy.path.abspath(out) if out else os.path.join(
+    # unsaved file: abspath leaves "//x.png" as "x.png", which the renderer can't write; anchor it to the cwd
+    out = os.path.abspath(bpy.path.abspath(out)) if out else os.path.join(
         os.path.dirname(bpy.data.filepath) or tempfile.gettempdir(), "review_sheet.png")
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
 

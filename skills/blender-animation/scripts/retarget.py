@@ -62,9 +62,22 @@ def _parts(arm):
             spine.append(b)
             continue
         part = CANON.get(core) or CANON.get(re.sub(r"\d+$", "", core))
+        if part == "hips" and side:  # Rigify's pelvis.L/.R are hip helpers, not the hips
+            continue
         if part and (part, side) not in out:
             out[(part, side)] = b.name
     spine.sort(key=lambda b: len(b.parent_recursive))
+    # Rigify calls its hips, neck and head spine, spine.004.. too: take them from the chain's ends
+    if spine and ("hips", "") not in out:
+        out[("hips", "")] = spine.pop(0).name
+    arm_root = out.get(("shoulder", "L")) or out.get(("upperarm", "L"))
+    chest = arm.data.bones[arm_root].parent if arm_root else None
+    above = [b for b in spine if chest is not None and chest in b.parent_recursive]
+    if above and ("head", "") not in out:
+        out[("head", "")] = above[-1].name
+        if len(above) > 1 and ("neck", "") not in out:
+            out[("neck", "")] = above[0].name
+        spine = [b for b in spine if b not in above]
     return out, [b.name for b in spine]
 
 

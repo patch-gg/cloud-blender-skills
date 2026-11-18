@@ -150,6 +150,8 @@ def run(flashes=2, frames=None, strokes=3, at=None, distance=300.0, height=450.0
             for f, v in env.items():
                 strength_sock.default_value = 400.0 * v * strength
                 strength_sock.keyframe_insert("default_value", frame=f)
+                bo.hide_render = v <= 0.0  # unlit, an emission curve renders black against a lit sky or fog
+                bo.keyframe_insert("hide_render", frame=f)
             res["bolt"] = bo.name
         w = sc.world
         if sky and w and w.node_tree:

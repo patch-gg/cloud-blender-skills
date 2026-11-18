@@ -51,7 +51,9 @@ def _fit(meta, mesh):
     meta.location += Vector(((lo.x + hi.x) / 2 - (ml.x + mh.x) / 2, (lo.y + hi.y) / 2 - (ml.y + mh.y) / 2,
                              lo.z - ml.z))
     bx.select_only([meta])
-    bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+    # location too: Rigify builds the rig from the bones' local coordinates at the origin, so an
+    # unapplied offset here would leave the generated rig off the mesh by that much
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     return round(s, 4)
 
 

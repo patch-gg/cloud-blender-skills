@@ -13,6 +13,7 @@ import math
 import os
 import sys
 
+import bmesh
 import bpy
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -22,6 +23,16 @@ import _bpyx as bx  # noqa: E402
 def _ctx(ob):
     return bpy.context.temp_override(object=ob, active_object=ob, selected_objects=[ob],
                                      selected_editable_objects=[ob])
+
+
+def _drop_short_edges(me, dist=2e-4):
+    """QuadriFlow refuses, silently (CANCELLED, no report), any mesh with an edge shorter than 1e-4, and
+    voxel remesh output often has a few: collapse them first."""
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    bmesh.ops.dissolve_degenerate(bm, dist=dist, edges=bm.edges[:])
+    bm.to_mesh(me)
+    bm.free()
 
 
 def _apply_all(ob):
@@ -46,19 +57,24 @@ def run(objects=None, method="quadriflow", tris=10000, voxel=0.0, symmetry=False
         if method == "quadriflow":
             # Quadriflow needs a closed manifold: voxel remesh first (size from target density; also
             # keeps dense sculpts fast). Some meshes make 5.3 reject the voxel output, so retry on the
-            # untouched source mesh before giving up.
+            # untouched source mesh before giving up. No sharp-edge preservation: a voxel surface's
+            # "sharp" edges are voxel steps, and preserving them stalled QuadriFlow for minutes on a
+            # detailed creature (1.6 s without).
             qf = dict(mode="FACES", target_faces=faces, use_mesh_symmetry=symmetry,
-                      use_preserve_sharp=True, seed=0)
+                      use_preserve_sharp=False, seed=0)
             orig = low.data.copy()
             area = sum(p.area for p in low.data.polygons) * max(low.scale) ** 2
             low.data.remesh_voxel_size = voxel or max(math.sqrt(area / max(faces * 4, 1)), 1e-4)
             with _ctx(low):
                 bpy.ops.object.voxel_remesh()
+            _drop_short_edges(low.data)
+            with _ctx(low):
                 res = bpy.ops.object.quadriflow_remesh(**qf)
             if res != {"FINISHED"}:
                 remeshed, low.data = low.data, orig
                 orig.name = remeshed.name
                 bpy.data.meshes.remove(remeshed)
+                _drop_short_edges(low.data)
                 with _ctx(low):
                     res = bpy.ops.object.quadriflow_remesh(**qf)
             else:

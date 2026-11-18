@@ -160,7 +160,8 @@ def pch(*args, timeout=None, ok=(0,), retries=0):
 def transient(e):
     """A dropped connection to a session (the work goes on there) or a session still waking up."""
     err = (e.details or {}).get("error") or {}
-    return err.get("code") in ("session_unreachable", "session_not_ready") or "fetch failed" in str(e)
+    return (err.get("code") in ("session_unreachable", "session_not_ready", "upload_failed")
+            or any(w in str(e) for w in ("fetch failed", "timed out", "ENETUNREACH", "ECONNRESET")))
 
 
 # ---------------------------------------------------------------- state + session
@@ -428,12 +429,20 @@ def cmd_run(o, st):
         cmd = ["env", f"LD_LIBRARY_PATH={BLENDER_LIB}", "blender", "-b"] + ([blend] if blend else [])
         cmd += ["--factory-startup", "--python-exit-code", "1", "-P", rscript, "--", *argv]
         # Blender's own log goes to a file: a long render's log can crowd the result out of the reply
-        log = f"{REMOTE_RUNS}/{time.strftime('%Y%m%d-%H%M%S')}-{os.getpid()}.log"
+        base = f"{REMOTE_RUNS}/{time.strftime('%Y%m%d-%H%M%S')}-{os.getpid()}"
+        log, res_f = base + ".log", base + ".json"
         sh = (f"mkdir -p {REMOTE_RUNS} && {' '.join(shlex.quote(c) for c in cmd)} > {log} 2>&1; rc=$?; "
-              f"grep '^{MARK}' {log}; if [ $rc -ne 0 ]; then tail -n 30 {log} >&2; else rm -f {log}; fi; exit $rc")
+              f"grep '^{MARK}' {log} | tee {res_f}; "
+              f"if [ $rc -ne 0 ]; then tail -n 30 {log} >&2; else rm -f {log}; fi; exit $rc")
         d = start(sid, "exec", [sh], o.timeout)
         out = (d or {}).get("stdout") or ""
-        js = [json.loads(l[len(MARK):]) for l in out.splitlines() if l.startswith(MARK)]
+        try:
+            js = [json.loads(l[len(MARK):]) for l in out.splitlines() if l.startswith(MARK)]
+        except ValueError:  # the reply cuts long output short: read the results from the session's file
+            with tempfile.TemporaryDirectory(prefix="bas_res_") as tmp:
+                pch("blender", "files", "download", sid, res_f, "-o", tmp, timeout=600, retries=2)
+                text = (Path(tmp) / res_f).read_text("utf-8")
+            js = [json.loads(l[len(MARK):]) for l in text.splitlines() if l.startswith(MARK)]
         res = {"code": (d or {}).get("exit_code", 1), "json": js, "error": None,
                "tail": [] if js else ((d or {}).get("stderr") or out).splitlines()[-20:]}
     else:
@@ -631,7 +640,10 @@ def cmd_stop(o, st):
     st.get("synced", {}).pop(sid, None)
     if st.get("session") == sid:
         st.pop("session", None)
-    save_state(o.dir, st)
+    if st.get("session") or st.get("synced"):
+        save_state(o.dir, st)
+    else:
+        (o.dir / STATE).unlink(missing_ok=True)  # nothing left to remember here
     print(json.dumps({"ok": True, "session": sid, "state": (s or {}).get("state"),
                       "spent": ((s or {}).get("cost") or {}).get("spent")}))
     return 0

@@ -81,14 +81,19 @@ class _G:
 def build_group():
     ng = bpy.data.node_groups.get(GROUP) or bpy.data.node_groups.new(GROUP, "ShaderNodeTree")
     ng.nodes.clear()
-    ng.interface.clear()
-    for nm, kind, d in (("Base Color", "Color", (0.8, 0.8, 0.8, 1)), ("Light Direction", "Vector", (0.3, -0.5, 0.8)),
-                        ("Scene Lighting", "Float", 0.0), ("Bands", "Float", 2.0), ("Threshold", "Float", 0.0),
-                        ("Softness", "Float", 0.02), ("Shadow Tint", "Color", (0.32, 0.27, 0.52, 1)),
-                        ("Rim", "Float", 0.0), ("Specular", "Float", 0.0)):
-        s = ng.interface.new_socket(nm, in_out="INPUT", socket_type=f"NodeSocket{kind}")
-        s.default_value = d
-    ng.interface.new_socket("Shader", in_out="OUTPUT", socket_type="NodeSocketShader")
+    ins = (("Base Color", "Color", (0.8, 0.8, 0.8, 1)), ("Light Direction", "Vector", (0.3, -0.5, 0.8)),
+           ("Scene Lighting", "Float", 0.0), ("Bands", "Float", 2.0), ("Threshold", "Float", 0.0),
+           ("Softness", "Float", 0.02), ("Shadow Tint", "Color", (0.32, 0.27, 0.52, 1)),
+           ("Rim", "Float", 0.0), ("Specular", "Float", 0.0))
+    want = [(nm, "INPUT", f"NodeSocket{kind}") for nm, kind, _ in ins] + [("Shader", "OUTPUT", "NodeSocketShader")]
+    have = sorted([(s.name, s.in_out, s.socket_type) for s in ng.interface.items_tree if s.item_type == "SOCKET"],
+                  key=lambda t: t[1] != "INPUT")  # inputs first, each side in its own order
+    if have != want:  # new sockets would unlink and reset every material an earlier call set up
+        ng.interface.clear()
+        for nm, kind, d in ins:
+            s = ng.interface.new_socket(nm, in_out="INPUT", socket_type=f"NodeSocket{kind}")
+            s.default_value = d
+        ng.interface.new_socket("Shader", in_out="OUTPUT", socket_type="NodeSocketShader")
     g = _G(ng)
     gi, go = g.n("NodeGroupInput"), g.n("NodeGroupOutput")
     I = gi.outputs  # noqa: E741
