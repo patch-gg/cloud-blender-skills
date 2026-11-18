@@ -39,12 +39,12 @@ function show(id) {
   if (!d || d.id === cur) return Promise.resolve();
   cur = d.id;
   const t = ++token;
-  $('name').textContent = d.id;
-  $('line').textContent = d.caption;
   return new Promise((done) => {
     const v = back;
     const swap = () => {
       if (t !== token) return done();
+      $('name').textContent = d.id;  // the caption changes with its clip, not before it has loaded
+      $('line').textContent = d.caption;
       v.playbackRate = speed;
       if (visible) v.play().catch(() => {});
       v.classList.add('on');
