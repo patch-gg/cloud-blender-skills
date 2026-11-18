@@ -107,7 +107,7 @@
     },
     "exposure_offset": 0,
     "lamp": 1,
-    "sec_per_image": 3.45
+    "sec_per_image": 2.35
    }
   },
   "lighthouse_m": 16,
@@ -128,7 +128,7 @@
    "device": "OPTIX",
    "denoiser": "OPENIMAGEDENOISE"
   },
-  "clip_kb": 657,
+  "clip_kb": 658,
   "seconds": 5.0
  },
  "assets": [
@@ -176,9 +176,9 @@
   }
  ],
  "sessions": {
-  "ses_01m7q0fwe7ezrsjkjj2y6zp9se": 4
+  "ses_01m7q1mdmxed687hveawvbpenr": 3
  },
- "minutes": 4.8,
- "blender": "5.2.0 LTS (Patch cloud)",
- "credits": 4
+ "credits": 3,
+ "minutes": 4.0,
+ "blender": "5.2.0 LTS (Patch cloud)"
 }
