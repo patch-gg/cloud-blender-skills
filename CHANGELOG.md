@@ -2,6 +2,9 @@
 
 ## cloud-blender-skills [1.0.0] - 2026-11-18
 Based on blender-skills 1.3.2. Every skill now runs on Patch's cloud Blender, and each has a demo made there.
+- Patch's cloud Blender is the default: once `pch` is installed, `run_in_blender.py` runs every call there, and
+  blender-core, blender-cloud and AGENTS.md tell agents to use it unless the person asks for their own Blender
+  (`--local`, or `BAS_BACKEND=local`). A machine without `pch` runs its local Blender as before.
 - New skill `blender-cloud` and `cloud.py`: live cloud sessions through `pch` (run, expr, exec, look, render,
   fork, push, pull, status, stop), files up and back by themselves, GPU renders, costs.
 - `run_in_blender.py --cloud` and `run_tests.py --cloud` (72 pass on the cloud; camera tracking needs a window and

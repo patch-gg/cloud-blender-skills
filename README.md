@@ -30,7 +30,8 @@ pch login
 python skills/blender-core/scripts/run_in_blender.py --cloud skills/blender-core/scripts/env_report.py
 ```
 
-That's any headless call from the skills with `--cloud` added. Under it is
+With `pch` installed, every call the skills make runs there by default, so your agent needs no Blender of its
+own; `--local` keeps a call on your machine. Under it is
 [`cloud.py`](skills/blender-cloud/scripts/cloud.py), which your agent learns from
 [`blender-cloud`](skills/blender-cloud/SKILL.md):
 
@@ -65,8 +66,9 @@ git clone https://github.com/patch-gg/cloud-blender-skills
 It installs into `~/.claude/skills` and `~/.agents/skills` (read by Codex, OpenCode, Gemini CLI, Copilot and Cursor).
 Options: `--agent claude|codex|opencode|gemini|copilot|cursor|all`, `--project DIR`, `--uninstall`.
 
-**Needs:** Blender 5.2 LTS or newer on your machine, or Patch's `pch` for the cloud. Optional: a Blender MCP server, so
-agents can work in your open Blender.
+**Then set up the cloud** (your agent can do this; the skills tell it how): `npm i -g @patchgg/cli`, then `pch login`.
+From then on the skills run on Patch's cloud Blender. Without it they use Blender 5.2 LTS or newer on your machine.
+Optional: a Blender MCP server, so agents can work in your open Blender.
 
 ## the demos.
 

@@ -54,3 +54,6 @@ foreach ($a in $Agent) {
     $verb = if ($Uninstall) { "removed" } else { "installed" }
     Write-Output "$verb $n skills -> $dst ($a)"
 }
+if (-not $Uninstall -and -not (Get-Command pch -ErrorAction SilentlyContinue)) {
+    Write-Output "Next: run them on Patch's cloud Blender, nothing else to install: npm i -g @patchgg/cli; pch login"
+}

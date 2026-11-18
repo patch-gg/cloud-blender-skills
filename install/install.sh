@@ -48,3 +48,6 @@ for a in "${AGENTS[@]}"; do
   done
   echo "$([ $UNINSTALL -eq 1 ] && echo removed || echo installed) $n skills -> $dst ($a)"
 done
+if [ $UNINSTALL -eq 0 ] && ! command -v pch >/dev/null 2>&1; then
+  echo "Next: run them on Patch's cloud Blender, nothing else to install: npm i -g @patchgg/cli && pch login"
+fi

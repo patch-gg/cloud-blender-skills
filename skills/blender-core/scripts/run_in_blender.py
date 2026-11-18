@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """Run a skill script in headless Blender and print only its JSON result.
 
-Host-side (system Python 3.9+, no bpy). Finds Blender automatically:
-$BLENDER_EXE > PATH > standard install dirs (newest version wins).
+Host-side (system Python 3.9+, no bpy). Runs on Patch's cloud Blender by default once Patch's
+`pch` CLI is installed (see blender-cloud); --local, or BAS_BACKEND=local, uses a Blender on this
+machine instead, found automatically: $BLENDER_EXE > PATH > standard install dirs (newest wins).
 
 Usage:
   python run_in_blender.py [--blend FILE] [--user-prefs] SCRIPT.py [-- script args]
   python run_in_blender.py --expr "import bpy; print(bpy.app.version_string)"
   python run_in_blender.py --which          # print the Blender path it would use
-  python run_in_blender.py --cloud [--session ses_...] [--process] [--blend FILE] SCRIPT.py [-- args]
-      # the same call on Patch's cloud Blender (costs credits): see blender-cloud/scripts/cloud.py
+  python run_in_blender.py --local ...       # a Blender on this machine, not the cloud
+  python run_in_blender.py [--session ses_...] [--process] ...   # cloud options: blender-cloud/scripts/cloud.py
 Exit code: 0 ok, 1 script error, 2 Blender not found.
 """
 import glob
@@ -53,12 +54,13 @@ def main():
     if "--" in a:
         i = a.index("--")
         a, rest = a[:i], a[i + 1:]
-    if "--cloud" in a:
+    if backend(a) == "cloud":
         return cloud_main(a, rest)
     exe = find_blender()
     if not exe:
-        print(json.dumps({"ok": False, "error": "Blender not found; set BLENDER_EXE, or add --cloud "
-                          "to run on Patch's cloud Blender (blender-cloud skill)"}))
+        print(json.dumps({"ok": False, "error": "Blender not found. Run it on Patch's cloud Blender instead, "
+                          "with nothing to install: set up pch (blender-cloud skill: npm i -g @patchgg/cli, "
+                          "then pch login) and call this again without --local; or set BLENDER_EXE"}))
         return 2
     if "--which" in a:
         print(exe)
@@ -90,6 +92,19 @@ def main():
         tail = (p.stderr or p.stdout).strip().splitlines()[-15:]
         print(json.dumps({"ok": False, "returncode": p.returncode, "log_tail": tail}))
     return 0 if p.returncode == 0 else 1
+
+
+def backend(a):
+    """cloud (Patch's cloud Blender) unless asked for local: --local/--cloud, then BAS_BACKEND, then
+    cloud whenever pch is installed. A machine without pch runs its own Blender as before."""
+    if "--local" in a:
+        return "local"
+    if "--cloud" in a:
+        return "cloud"
+    env = os.environ.get("BAS_BACKEND", "").lower()
+    if env in ("local", "cloud"):
+        return env
+    return "cloud" if os.environ.get("PCH") or shutil.which("pch") else "local"
 
 
 def cloud_main(a, rest):
