@@ -1,0 +1,122 @@
+{
+ "skill": "blender-animation",
+ "prompt": "Put this mocap walk on my character (he's much taller), make sure it loops, and bake it onto his game skeleton for export.",
+ "numbers": {
+  "source": {
+   "rig": "Mocap",
+   "clip": "Walk",
+   "frames": [
+    0,
+    53
+   ],
+   "height_m": 1.7,
+   "bones": 22
+  },
+  "target": {
+   "rig": "GAME_RIG_Body",
+   "height_m": 1.984
+  },
+  "rest_matched_deg": {
+   "thigh.L": 3.5,
+   "thigh.R": 3.5,
+   "shin.L": 2.9,
+   "shin.R": 2.9,
+   "upper_arm.L": 9.2,
+   "upper_arm.R": 9.2,
+   "forearm.L": 23.3,
+   "forearm.R": 23.3,
+   "hand.L": 22.8,
+   "hand.R": 22.8
+  },
+  "retarget": {
+   "mapped": 22,
+   "hips": "spine",
+   "hips_scale": 1.1525,
+   "unmapped_key_parts": [],
+   "max_error_deg": 0,
+   "frames": [
+    0,
+    53
+   ]
+  },
+  "loop_check": {
+   "source": {
+    "loops": true,
+    "pops": 0,
+    "hitches": [
+     "toe_L",
+     "clavicle_L",
+     "shin_R"
+    ]
+   },
+   "target": {
+    "loops": true,
+    "pops": 0,
+    "fixed_curves": 0,
+    "hitches": [
+     "toe.L",
+     "shoulder.L",
+     "shin.R",
+     "shin.R.001"
+    ]
+   },
+   "target_after_bake": {
+    "loops": true,
+    "pops": 0
+   }
+  },
+  "bake": {
+   "baked": [
+    {
+     "clip": "GAME_RIG_Body|Walk",
+     "action": "GAME_RIG_Body|Walk",
+     "frames": [
+      0,
+      53
+     ]
+    }
+   ],
+   "keys_before": 4914,
+   "keys_after": 5408,
+   "clip": {
+    "name": "GAME_RIG_Body|Walk",
+    "range": [
+     0,
+     53
+    ],
+    "fcurves": 360,
+    "fake_user": true
+   }
+  },
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "sec_per_image": 0.45,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 602,
+  "seconds": 4.42
+ },
+ "assets": [
+  {
+   "files": "demos/blender-animation/work/assets/human-0255.glb",
+   "license": "CC0-1.0",
+   "source": "https://github.com/makehumancommunity/mpfb2/tree/d0a32e57a7f915cb2f2b95410e2117648c7bbb7e",
+   "author": "MakeHuman (MPFB)"
+  },
+  {
+   "files": "demos/blender-animation/work/assets/woman.glb",
+   "license": "CC0-1.0",
+   "source": "https://github.com/patch-gg/anymove",
+   "author": "anymove"
+  }
+ ],
+ "sessions": {
+  "ses_01m7pz0g3hey8s2cqveq7wgj0q": 2
+ },
+ "minutes": 2.9,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 2
+}

@@ -1,0 +1,17 @@
+# credits
+
+- `alarm_clock_01.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/alarm_clock_01 (from Patch's asset library)
+- `wooden_bucket_01.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/wooden_bucket_01 (from Patch's asset library)
+- `korean_fire_extinguisher_01.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/korean_fire_extinguisher_01 (from Patch's asset library)
+- `watering_can_metal_01.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/watering_can_metal_01 (from Patch's asset library)
+- `potted_plant_04.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/potted_plant_04 (from Patch's asset library)
+- `rubber_duck_toy.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/rubber_duck_toy (from Patch's asset library)
+- `metal_toolbox.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/metal_toolbox (from Patch's asset library)
+- `barrel_01.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/Barrel_01 (from Patch's asset library)
+- `vintage_electric_kettle.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/vintage_electric_kettle (from Patch's asset library)
+- `wicker_basket_02.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/wicker_basket_02 (from Patch's asset library)
+- `baseball_01.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/baseball_01 (from Patch's asset library)
+- `pot_enamel_01.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/pot_enamel_01 (from Patch's asset library)
+- `garden_sprinkler_01.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/garden_sprinkler_01 (from Patch's asset library)
+- `american_football.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/american_football (from Patch's asset library)
+- `measuring_tape_01.glb`: Poly Haven, CC0-1.0, https://polyhaven.com/a/measuring_tape_01 (from Patch's asset library)

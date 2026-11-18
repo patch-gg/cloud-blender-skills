@@ -1,0 +1,512 @@
+{
+	"mode": "browser",
+	"block": {
+		"controls": [
+			{
+				"id": "skill",
+				"label": "Skill",
+				"type": "choice",
+				"default": "blender-workflow-recipes",
+				"essential": true,
+				"hint": "Each clip is one skill, run by an agent on Patch's cloud Blender. The commands it ran are in the repo, under demos/.",
+				"options": [
+					{
+						"value": "blender-workflow-recipes",
+						"label": "Recipes",
+						"group": "Ship",
+						"image": "thumbs/blender-workflow-recipes.webp"
+					},
+					{
+						"value": "blender-core",
+						"label": "Core",
+						"group": "Start",
+						"image": "thumbs/blender-core.webp"
+					},
+					{
+						"value": "blender-cloud",
+						"label": "Cloud",
+						"group": "Start",
+						"image": "thumbs/blender-cloud.webp"
+					},
+					{
+						"value": "blender-scene-setup",
+						"label": "Scene setup",
+						"group": "Start",
+						"image": "thumbs/blender-scene-setup.webp"
+					},
+					{
+						"value": "blender-asset-qa",
+						"label": "Asset QA",
+						"group": "Start",
+						"image": "thumbs/blender-asset-qa.webp"
+					},
+					{
+						"value": "blender-hardsurface-modeling",
+						"label": "Hard surface",
+						"group": "Model",
+						"image": "thumbs/blender-hardsurface-modeling.webp"
+					},
+					{
+						"value": "blender-sculpting",
+						"label": "Sculpting",
+						"group": "Model",
+						"image": "thumbs/blender-sculpting.webp"
+					},
+					{
+						"value": "blender-retopology-uv",
+						"label": "Retopo & UVs",
+						"group": "Model",
+						"image": "thumbs/blender-retopology-uv.webp"
+					},
+					{
+						"value": "blender-geometry-nodes",
+						"label": "Geometry nodes",
+						"group": "Model",
+						"image": "thumbs/blender-geometry-nodes.webp"
+					},
+					{
+						"value": "blender-pbr-materials",
+						"label": "PBR materials",
+						"group": "Surface",
+						"image": "thumbs/blender-pbr-materials.webp"
+					},
+					{
+						"value": "blender-texturing",
+						"label": "Texturing",
+						"group": "Surface",
+						"image": "thumbs/blender-texturing.webp"
+					},
+					{
+						"value": "blender-texture-baking",
+						"label": "Baking",
+						"group": "Surface",
+						"image": "thumbs/blender-texture-baking.webp"
+					},
+					{
+						"value": "blender-stylized-npr",
+						"label": "Toon & NPR",
+						"group": "Surface",
+						"image": "thumbs/blender-stylized-npr.webp"
+					},
+					{
+						"value": "blender-character-rigging",
+						"label": "Rigging",
+						"group": "Characters",
+						"image": "thumbs/blender-character-rigging.webp"
+					},
+					{
+						"value": "blender-facial-shapekeys",
+						"label": "Face shapes",
+						"group": "Characters",
+						"image": "thumbs/blender-facial-shapekeys.webp"
+					},
+					{
+						"value": "blender-animation",
+						"label": "Animation",
+						"group": "Characters",
+						"image": "thumbs/blender-animation.webp"
+					},
+					{
+						"value": "blender-clothing",
+						"label": "Clothing",
+						"group": "Characters",
+						"image": "thumbs/blender-clothing.webp"
+					},
+					{
+						"value": "blender-hair-grooming",
+						"label": "Hair",
+						"group": "Characters",
+						"image": "thumbs/blender-hair-grooming.webp"
+					},
+					{
+						"value": "blender-environment-kits",
+						"label": "Environments",
+						"group": "Worlds",
+						"image": "thumbs/blender-environment-kits.webp"
+					},
+					{
+						"value": "blender-time-of-day",
+						"label": "Time of day",
+						"group": "Worlds",
+						"image": "thumbs/blender-time-of-day.webp"
+					},
+					{
+						"value": "blender-weather-fx",
+						"label": "Weather",
+						"group": "Worlds",
+						"image": "thumbs/blender-weather-fx.webp"
+					},
+					{
+						"value": "blender-simulation",
+						"label": "Simulation",
+						"group": "Worlds",
+						"image": "thumbs/blender-simulation.webp"
+					},
+					{
+						"value": "blender-lighting-lookdev",
+						"label": "Look-dev",
+						"group": "Worlds",
+						"image": "thumbs/blender-lighting-lookdev.webp"
+					},
+					{
+						"value": "blender-game-optimization",
+						"label": "Optimization",
+						"group": "Ship",
+						"image": "thumbs/blender-game-optimization.webp"
+					},
+					{
+						"value": "blender-export-pipelines",
+						"label": "Export",
+						"group": "Ship",
+						"image": "thumbs/blender-export-pipelines.webp"
+					},
+					{
+						"value": "blender-rendering",
+						"label": "Rendering",
+						"group": "Ship",
+						"image": "thumbs/blender-rendering.webp"
+					},
+					{
+						"value": "blender-video-editing",
+						"label": "Video editing",
+						"group": "Ship",
+						"image": "thumbs/blender-video-editing.webp"
+					},
+					{
+						"value": "blender-pipeline-automation",
+						"label": "Pipelines",
+						"group": "Ship",
+						"image": "thumbs/blender-pipeline-automation.webp"
+					},
+					{
+						"value": "blender-addon-development",
+						"label": "Add-ons",
+						"group": "Ship",
+						"image": "thumbs/blender-addon-development.webp"
+					}
+				]
+			},
+			{
+				"id": "caption",
+				"label": "Caption",
+				"type": "toggle",
+				"default": true,
+				"essential": true,
+				"hint": "The skill's name and what the clip shows."
+			},
+			{
+				"id": "speed",
+				"label": "Speed",
+				"type": "number",
+				"min": 0.25,
+				"max": 2,
+				"step": 0.25,
+				"default": 1,
+				"unit": "×",
+				"hint": "How fast the clip plays."
+			}
+		]
+	},
+	"credits": [
+		{
+			"files": "media/blender-cloud.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/fire_hydrant"
+		},
+		{
+			"files": "media/blender-scene-setup.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/potted_plant_02"
+		},
+		{
+			"files": "media/blender-scene-setup.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/wine_barrel_01"
+		},
+		{
+			"files": "media/blender-scene-setup.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/metal_tool_chest"
+		},
+		{
+			"files": "media/blender-scene-setup.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/side_table_tall_01"
+		},
+		{
+			"files": "media/blender-asset-qa.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/wine_barrel_01"
+		},
+		{
+			"files": "media/blender-retopology-uv.*",
+			"license": "CC-BY-4.0",
+			"author": "Scenario",
+			"source": "https://huggingface.co/datasets/scenario-labs/3d-collection/blob/55b4c002b4c1529fc48da3dff98516c3069bfa3f/assets/scenario_asset_3itGMDfk3jK3eUXPc7rZhr1G/output.glb"
+		},
+		{
+			"files": "media/blender-geometry-nodes.*",
+			"license": "CC0-1.0",
+			"author": "Kenney",
+			"source": "https://kenney.nl/assets/nature-kit"
+		},
+		{
+			"files": "media/blender-texturing.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/metal_jerrycan"
+		},
+		{
+			"files": "media/blender-stylized-npr.*",
+			"license": "CC0-1.0",
+			"author": "KayKit",
+			"source": "https://kaylousberg.itch.io/kaykit-adventurers"
+		},
+		{
+			"files": "media/blender-character-rigging.*",
+			"license": "CC0-1.0",
+			"author": "MakeHuman (MPFB)",
+			"source": "https://github.com/makehumancommunity/mpfb2/tree/d0a32e57a7f915cb2f2b95410e2117648c7bbb7e"
+		},
+		{
+			"files": "media/blender-animation.*",
+			"license": "CC0-1.0",
+			"author": "MakeHuman (MPFB)",
+			"source": "https://github.com/makehumancommunity/mpfb2/tree/d0a32e57a7f915cb2f2b95410e2117648c7bbb7e"
+		},
+		{
+			"files": "media/blender-animation.*",
+			"license": "CC0-1.0",
+			"author": "anymove",
+			"source": "https://github.com/patch-gg/anymove"
+		},
+		{
+			"files": "media/blender-clothing.*",
+			"license": "CC0-1.0",
+			"author": "MakeHuman (MPFB)",
+			"source": "https://github.com/makehumancommunity/mpfb2/tree/d0a32e57a7f915cb2f2b95410e2117648c7bbb7e"
+		},
+		{
+			"files": "media/blender-environment-kits.*",
+			"license": "CC0-1.0",
+			"author": "Kenney",
+			"source": "https://kenney.nl/assets/nature-kit"
+		},
+		{
+			"files": "media/blender-time-of-day.*",
+			"license": "CC-BY-4.0",
+			"author": "Polyfork",
+			"source": "https://polyfork.dev/asset/old-lighthouse-48ca6c"
+		},
+		{
+			"files": "media/blender-time-of-day.*",
+			"license": "CC0-1.0",
+			"author": "Kenney",
+			"source": "https://kenney.nl/assets/nature-kit"
+		},
+		{
+			"files": "media/blender-weather-fx.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/modular_urban_apartments_facade"
+		},
+		{
+			"files": "media/blender-weather-fx.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/street_lamp_01"
+		},
+		{
+			"files": "media/blender-weather-fx.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/fire_hydrant"
+		},
+		{
+			"files": "media/blender-weather-fx.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/metal_trash_can"
+		},
+		{
+			"files": "media/blender-weather-fx.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/trashbag"
+		},
+		{
+			"files": "media/blender-weather-fx.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/covered_car"
+		},
+		{
+			"files": "media/blender-simulation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/wooden_crate_01"
+		},
+		{
+			"files": "media/blender-simulation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/wooden_crate_02"
+		},
+		{
+			"files": "media/blender-simulation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/wooden_military_crate"
+		},
+		{
+			"files": "media/blender-simulation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/Barrel_01"
+		},
+		{
+			"files": "media/blender-lighting-lookdev.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/marble_bust_01"
+		},
+		{
+			"files": "media/blender-game-optimization.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/horse_statue_01"
+		},
+		{
+			"files": "media/blender-export-pipelines.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/rubber_duck_toy"
+		},
+		{
+			"files": "media/blender-rendering.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/potted_plant_04"
+		},
+		{
+			"files": "media/blender-rendering.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/antique_ceramic_vase_01"
+		},
+		{
+			"files": "media/blender-rendering.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/brass_goblets"
+		},
+		{
+			"files": "media/blender-rendering.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/wine_bottles_01"
+		},
+		{
+			"files": "media/blender-rendering.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/brass_vase_03"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/alarm_clock_01"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/wooden_bucket_01"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/korean_fire_extinguisher_01"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/watering_can_metal_01"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/potted_plant_04"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/rubber_duck_toy"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/metal_toolbox"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/Barrel_01"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/vintage_electric_kettle"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/wicker_basket_02"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/baseball_01"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/pot_enamel_01"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/garden_sprinkler_01"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/american_football"
+		},
+		{
+			"files": "media/blender-pipeline-automation.*",
+			"license": "CC0-1.0",
+			"author": "Poly Haven",
+			"source": "https://polyhaven.com/a/measuring_tape_01"
+		}
+	]
+}

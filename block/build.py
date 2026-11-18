@@ -51,7 +51,18 @@ def main():
         {"id": "speed", "label": "Speed", "type": "number", "min": 0.25, "max": 2, "step": 0.25, "default": 1,
          "unit": "×", "hint": "How fast the clip plays."},
     ]}
-    recipe = {"mode": "browser", "block": block}
+    credits = []  # every model the clips show, with its licence (CC-BY ones need the line)
+    for d in demos:
+        res = ROOT / "demos" / d["id"] / "result.json"
+        seen = set()
+        for a in (json.loads(res.read_text("utf-8")).get("assets") or []) if res.exists() else []:
+            key = (a.get("author"), a.get("license"), a.get("source"))
+            if key in seen:
+                continue
+            seen.add(key)
+            credits.append({"files": f"media/{d['id']}.*", "license": a.get("license"), "author": a.get("author"),
+                            "source": a.get("source")})
+    recipe = {"mode": "browser", "block": block, "credits": credits}
     (ROOT / "recipe.json").write_text(json.dumps(recipe, indent="\t", ensure_ascii=False) + "\n", "utf-8")
     html = (ROOT / "block" / "index.html").read_text("utf-8")
     html = html.replace("/*DEMOS*/[]", json.dumps(demos, ensure_ascii=False))

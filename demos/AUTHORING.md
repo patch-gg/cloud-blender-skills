@@ -14,7 +14,7 @@ demos/<skill>/
   result.json      the numbers (written by d.finish)
   commands.md      the cloud.py commands that ran (written by d.finish)
   NOTES.md         only if something needed fixing or doesn't work on the cloud
-  CREDITS.md       only if a CC-BY asset was used
+  CREDITS.md       the models from Patch's asset library, with their licences (written by d.finish)
   work/            scratch, mirrored to the session's /work, not committed
 ```
 

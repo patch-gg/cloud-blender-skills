@@ -1,0 +1,61 @@
+{
+ "skill": "blender-asset-qa",
+ "prompt": "QA this barrel before it ships: find what's broken, fix it, and show me it passes.",
+ "numbers": {
+  "asset": "polyhaven:wine_barrel_01",
+  "profile": "game",
+  "pass_before": false,
+  "errors_before": [
+   "Barrel_Body: faces use empty/missing material slot(s) [1] (grey in engines)",
+   "Barrel_Body: 1 closed parts with normals pointing inward",
+   "z-fighting: Barrel_Lid<->Barrel_Lid.001 (762 overlapping coplanar tri pairs)",
+   "z-fighting: Barrel_Body (94 overlapping coplanar tri pairs)",
+   "z-fighting: Barrel_Body<->Barrel_Base (4 overlapping coplanar tri pairs)",
+   "floating/detached part in Barrel_Bung (86 verts at [-0.385, -0.176, 0.436])"
+  ],
+  "caught": [
+   "zfighting",
+   "floating",
+   "flipped",
+   "empty_slot"
+  ],
+  "fixes": [
+   "deleted Barrel_Lid.001",
+   "slid 86-vert part of Barrel_Bung 36.0 mm in (gap now 0.66 mm)",
+   "turned 1 inside-out part(s) of Barrel_Body outside out",
+   "moved 328 faces of Barrel_Body onto wine_barrel_01, removed 1 empty slot(s)"
+  ],
+  "pass_after": true,
+  "errors_after": [],
+  "warnings_after": 4,
+  "tris": 10812,
+  "review_sheets": [
+   "review_broken.png",
+   "review_fixed.png"
+  ],
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "sec_per_image": 0.53,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 391,
+  "seconds": 5.0
+ },
+ "assets": [
+  {
+   "files": "**/wine_barrel_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/wine_barrel_01",
+   "author": "Poly Haven"
+  }
+ ],
+ "sessions": {
+  "ses_01m7pzrxbyeffa1dx216hbp37c": 2
+ },
+ "minutes": 2.9,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 2
+}

@@ -1,0 +1,58 @@
+{
+ "skill": "blender-hair-grooming",
+ "prompt": "Give this character a short brown mop of hair with Blender's hair nodes, then turn it into game-ready hair cards with a strand texture atlas.",
+ "numbers": {
+  "groom": {
+   "curves": 19187,
+   "points": 230244,
+   "length_mean_m": 0.0614,
+   "root_gap_max_m": 0,
+   "modifiers": [
+    "Generate Hair Curves",
+    "Interpolate Hair Curves",
+    "Clump Hair Curves",
+    "Displace Hair Curves",
+    "Shrinkwrap Hair Curves",
+    "Hair Curves Noise",
+    "Set Hair Curve Profile",
+    "Hair Dynamics"
+   ]
+  },
+  "strands_rendered": 95910,
+  "cards": {
+   "card_count": 900,
+   "tris": 19800,
+   "material": "M_HairCard"
+  },
+  "atlas": [
+   "T_HairCard_BC.png",
+   "T_HairCard_ID.png",
+   "T_HairCard_RootTip.png"
+  ],
+  "qa_pass": false,
+  "qa_errors": [
+   "z-fighting: Hair_Cards (2271 overlapping coplanar tri pairs)",
+   "z-fighting: Head<->Hair_Cards (206 overlapping coplanar tri pairs)"
+  ],
+  "qa_warnings": 4,
+  "render": {
+   "engine": "CYCLES",
+   "device": "OPTIX",
+   "sec_per_image": 4.9,
+   "res": [
+    1280,
+    720
+   ],
+   "denoiser": "OPENIMAGEDENOISE"
+  },
+  "clip_kb": 1236,
+  "seconds": 4.0
+ },
+ "assets": null,
+ "sessions": {
+  "ses_01m7q0pf8qemdvm897zczpfm07": 7
+ },
+ "minutes": 12.1,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 7
+}

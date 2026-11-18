@@ -5,6 +5,7 @@ Prompt it stands for: "Show me that hydrant six ways at once: studio, toon, snow
 and night."
 Run: python demos/blender-cloud/demo.py   (pch signed in; BAS_RENDER_SESSION optional)
 """
+import os
 import shutil
 import subprocess
 import sys
@@ -14,7 +15,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "_lib"))
 from demo import SKILLS, Demo  # noqa: E402
 
-KIT = Path.home() / "patch/brand/handoff/out/04 Type/Funnel Sans/FunnelSans[wght].ttf"  # labels only
+FONTS = [os.environ.get("BAS_LABEL_FONT", ""), "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+         "/System/Library/Fonts/Supplemental/Arial.ttf", "C:/Windows/Fonts/arial.ttf"]  # the grid's labels only
+KIT = next((Path(f) for f in FONTS if f and Path(f).is_file()), None)
 LOOKS = {  # fork -> the skill calls that make its look
     "studio": [("run", "studio.py"), ("blender-lighting-lookdev/scripts/turntable.py", "--objects", "Hydrant",
                "--rig", "studio", "--backdrop", "--frames", "120", "--lens", "50", "--elevation", "10"),
@@ -85,6 +88,8 @@ if errors:
 
 # tile the six clips: 3 x 2 cells of 426 x 360 with a 2 px dark gap, a small label in each
 grid = d.work / "grid.mp4"
+if KIT is None:
+    raise SystemExit("no font for the labels: set BAS_LABEL_FONT to a .ttf")
 font = d.work / "label.ttf"
 shutil.copy2(KIT, font)
 inputs, chains = [], []

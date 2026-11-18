@@ -1,0 +1,69 @@
+{
+ "skill": "blender-retopology-uv",
+ "prompt": "Retopologise this 440k-triangle AI mesh into a clean quad mesh under 5k triangles, unwrap it and even out the texel density.",
+ "numbers": {
+  "source_tris": 441766,
+  "retopo": {
+   "method": "quadriflow",
+   "low": "Fox_low",
+   "faces_before": 441766,
+   "faces_after": 1988,
+   "tris_after": 3976,
+   "uvs_kept": false
+  },
+  "reduction": 111.1,
+  "uv": {
+   "method": "smart",
+   "margin_fraction": 0.00391,
+   "res": 2048
+  },
+  "texel_density": {
+   "measured": {
+    "px_per_m": 1146.4,
+    "island_min": 970,
+    "island_max": 1667.5,
+    "islands": 124,
+    "spread": 1.72
+   },
+   "set": 1024,
+   "fits_0_1": true,
+   "after": {
+    "px_per_m": 1024,
+    "island_min": 1024,
+    "island_max": 1024,
+    "islands": 124,
+    "spread": 1
+   }
+  },
+  "qa_pass": true,
+  "qa_errors": [],
+  "qa_warnings": [
+   "asset lowest point z=0.0039 (not resting on ground plane z=0)"
+  ],
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "device": null,
+   "sec_per_image": 0.74,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 1069,
+  "seconds": 5.0
+ },
+ "assets": [
+  {
+   "files": "**/peach_fox_creature.glb",
+   "license": "CC-BY-4.0",
+   "source": "https://huggingface.co/datasets/scenario-labs/3d-collection/blob/55b4c002b4c1529fc48da3dff98516c3069bfa3f/assets/scenario_asset_3itGMDfk3jK3eUXPc7rZhr1G/output.glb",
+   "author": "Scenario"
+  }
+ ],
+ "sessions": {
+  "ses_01m7q12znve4avyq5b6d9wnbd3": 3
+ },
+ "credits": 3,
+ "minutes": 3.1,
+ "blender": "5.2.0 LTS (Patch cloud)"
+}

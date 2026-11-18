@@ -1,0 +1,166 @@
+{
+ "skill": "blender-export-pipelines",
+ "prompt": "Export this rubber duck for Godot, the web, USD, Unity, Unreal and Roblox, and prove every file comes back into Blender the same.",
+ "numbers": {
+  "asset": {
+   "id": "polyhaven:rubber_duck_toy",
+   "object": "SM_RubberDuck",
+   "tris": 4288,
+   "dims_m": [
+    0.2135,
+    0.3,
+    0.2855
+   ],
+   "materials": [
+    "M_RubberDuck"
+   ],
+   "textures": [
+    "T_RubberDuck_BaseColor",
+    "T_RubberDuck_MetalRough",
+    "T_RubberDuck_Normal"
+   ]
+  },
+  "qa": {
+   "pass": true,
+   "errors": [],
+   "warnings": [
+    "SM_RubberDuck: duplicate verts=332 loose verts=0"
+   ]
+  },
+  "exports": {
+   "godot": {
+    "file": "SM_RubberDuck_godot.glb",
+    "ok": true,
+    "kb": 717.4,
+    "glb": {
+     "tris": 4288,
+     "materials": 1,
+     "images": 3,
+     "extensions": [
+      "KHR_materials_specular",
+      "KHR_materials_ior"
+     ]
+    }
+   },
+   "web": {
+    "file": "SM_RubberDuck_web.glb",
+    "ok": true,
+    "kb": 131.7,
+    "glb": {
+     "tris": 4288,
+     "materials": 1,
+     "images": 3,
+     "extensions": [
+      "EXT_meshopt_compression",
+      "KHR_materials_specular",
+      "KHR_materials_ior",
+      "EXT_texture_webp"
+     ]
+    }
+   },
+   "usd": {
+    "file": "SM_RubberDuck.usdz",
+    "ok": true,
+    "kb": 836.4
+   },
+   "unity": {
+    "file": "SM_RubberDuck_unity.fbx",
+    "ok": true,
+    "kb": 297.8
+   },
+   "unreal": {
+    "file": "SM_RubberDuck_unreal.fbx",
+    "ok": true,
+    "kb": 297.3
+   },
+   "roblox": {
+    "file": "SM_RubberDuck_roblox.fbx",
+    "ok": true,
+    "kb": 448.7
+   }
+  },
+  "exports_ok": 6,
+  "roundtrip": {
+   "godot": {
+    "max_dev_mm": 0,
+    "tris": 4288,
+    "materials": 1,
+    "images": 3,
+    "images_loaded": 3,
+    "base_color_textured": true,
+    "ok": true
+   },
+   "web": {
+    "max_dev_mm": 0.061,
+    "tris": 4288,
+    "materials": 1,
+    "images": 3,
+    "images_loaded": 3,
+    "base_color_textured": true,
+    "ok": true
+   },
+   "usd": {
+    "max_dev_mm": 0,
+    "tris": 4288,
+    "materials": 1,
+    "images": 3,
+    "images_loaded": 3,
+    "base_color_textured": true,
+    "ok": true
+   },
+   "unity": {
+    "max_dev_mm": 0,
+    "tris": 4288,
+    "materials": 1,
+    "images": 2,
+    "images_loaded": 2,
+    "base_color_textured": true,
+    "ok": true
+   },
+   "unreal": {
+    "max_dev_mm": 0,
+    "tris": 4288,
+    "materials": 1,
+    "images": 2,
+    "images_loaded": 2,
+    "base_color_textured": true,
+    "ok": true
+   },
+   "roblox": {
+    "max_dev_mm": 0,
+    "tris": 4288,
+    "materials": 1,
+    "images": 2,
+    "images_loaded": 2,
+    "base_color_textured": true,
+    "ok": true
+   }
+  },
+  "roundtrip_ok": 6,
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "sec_per_image": 0.44,
+   "res": [
+    1280,
+    720
+   ],
+   "view": "AgX"
+  },
+  "clip_kb": 429,
+  "seconds": 4.0
+ },
+ "assets": [
+  {
+   "files": "demos/blender-export-pipelines/work/assets/rubber_duck_toy.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/rubber_duck_toy",
+   "author": "Poly Haven"
+  }
+ ],
+ "sessions": {
+  "ses_01m7py7adrefd8m15mz7q9zmc1": 3
+ },
+ "minutes": 3.6,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 3
+}

@@ -1,0 +1,71 @@
+{
+ "skill": "blender-addon-development",
+ "prompt": "Write me a Blender extension that adds spur gears with a tooth count, size and spokes; validate it, build it, install it, and show it working.",
+ "numbers": {
+  "extension": "gear_maker 1.0.0",
+  "validate": true,
+  "zip_bytes": 4274,
+  "installed": "STATUS Installed \"gear_maker\"",
+  "operator": "gear_maker.add_gear",
+  "calls": [
+   {
+    "teeth": 12,
+    "spokes": 0,
+    "bore": 0.01,
+    "metal": "BRASS",
+    "tris": 4032,
+    "diameter": 0.168,
+    "result": [
+     "FINISHED"
+    ]
+   },
+   {
+    "teeth": 36,
+    "spokes": 6,
+    "bore": 0.016,
+    "metal": "STEEL",
+    "tris": 13608,
+    "diameter": 0.456,
+    "result": [
+     "FINISHED"
+    ]
+   },
+   {
+    "teeth": 20,
+    "spokes": 5,
+    "bore": 0.012,
+    "metal": "BRASS",
+    "tris": 8364,
+    "diameter": 0.264,
+    "result": [
+     "FINISHED"
+    ]
+   }
+  ],
+  "turns_per_loop": [
+   -1,
+   0.333,
+   -0.6
+  ],
+  "qa_pass": 3,
+  "qa_checked": 3,
+  "qa_errors": [],
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "sec_per_image": 0.54,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 721,
+  "seconds": 5.0
+ },
+ "assets": null,
+ "sessions": {
+  "ses_01m7q0km14ed2td089eg848qan": 2
+ },
+ "minutes": 2.7,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 2
+}

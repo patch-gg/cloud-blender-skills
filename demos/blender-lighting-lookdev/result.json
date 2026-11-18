@@ -1,0 +1,73 @@
+{
+ "skill": "blender-lighting-lookdev",
+ "prompt": "Set up a look-dev turntable for this bust and show it under a studio light rig, an HDRI and both, side by side.",
+ "numbers": {
+  "tris": 17456,
+  "hdri": "sunset.exr",
+  "rigs": {
+   "studio": {
+    "lights": 3,
+    "distance": 2.911
+   },
+   "hdri": {
+    "lights": 1,
+    "distance": 2.911
+   },
+   "both": {
+    "lights": 4,
+    "distance": 2.911
+   }
+  },
+  "frames": 120,
+  "qa_pass": true,
+  "qa_errors": [],
+  "render": {
+   "studio": {
+    "engine": "CYCLES",
+    "device": "OPTIX",
+    "sec_per_image": 0.77,
+    "res": [
+     428,
+     720
+    ],
+    "denoiser": "OPENIMAGEDENOISE"
+   },
+   "hdri": {
+    "engine": "CYCLES",
+    "device": "OPTIX",
+    "sec_per_image": 0.17,
+    "res": [
+     428,
+     720
+    ],
+    "denoiser": "OPENIMAGEDENOISE"
+   },
+   "both": {
+    "engine": "CYCLES",
+    "device": "OPTIX",
+    "sec_per_image": 0.22,
+    "res": [
+     428,
+     720
+    ],
+    "denoiser": "OPENIMAGEDENOISE"
+   }
+  },
+  "clip_kb": 1206,
+  "seconds": 5.0
+ },
+ "assets": [
+  {
+   "files": "demos/blender-lighting-lookdev/work/assets/marble_bust_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/marble_bust_01",
+   "author": "Poly Haven"
+  }
+ ],
+ "sessions": {
+  "ses_01m7pyqtqteem939a98dnezyav": 5
+ },
+ "minutes": 5.9,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 5
+}

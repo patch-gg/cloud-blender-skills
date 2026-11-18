@@ -1,0 +1,93 @@
+{
+ "skill": "blender-scene-setup",
+ "prompt": "This .blend is a mess. Audit it and clean it up the way a studio would: names, collections, transforms, origins, units and orphans.",
+ "numbers": {
+  "props": 4,
+  "issues_before": {
+   "unapplied_scale": 2,
+   "negative_scale": 1,
+   "rotated": 1,
+   "default_names": 4,
+   "in_scene_root": 4,
+   "origin_far": 1
+  },
+  "units_before": [
+   "IMPERIAL",
+   "FEET"
+  ],
+  "orphans_before": 13,
+  "fixed": [
+   "purged 16 orphan blocks",
+   "applied rot/scale on 3 meshes"
+  ],
+  "issues_after": {},
+  "units_after": [
+   "METRIC",
+   "METERS"
+  ],
+  "orphans_after": 0,
+  "renamed": {
+   "Mesh.002": "SM_PottedPlant",
+   "Cylinder.001": "SM_WineBarrel",
+   "Cube.007": "SM_ToolChest",
+   "Cube.003": "SM_SideTable"
+  },
+  "collections": [
+   "ASSET_PottedPlant",
+   "ASSET_SideTable",
+   "ASSET_ToolChest",
+   "ASSET_WineBarrel"
+  ],
+  "qa_profile": "render",
+  "qa_pass": 1,
+  "qa_checked": 4,
+  "qa_errors": [
+   "z-fighting: SM_PottedPlant (46 overlapping coplanar tri pairs)",
+   "z-fighting: SM_ToolChest (48 overlapping coplanar tri pairs)",
+   "z-fighting: SM_SideTable (94 overlapping coplanar tri pairs)"
+  ],
+  "inside_out_after_fix": 0,
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "sec_per_image": 0.39,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 500,
+  "seconds": 5.0
+ },
+ "assets": [
+  {
+   "files": "demos/blender-scene-setup/work/assets/potted_plant_02.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/potted_plant_02",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-scene-setup/work/assets/wine_barrel_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/wine_barrel_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-scene-setup/work/assets/metal_tool_chest.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/metal_tool_chest",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-scene-setup/work/assets/side_table_tall_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/side_table_tall_01",
+   "author": "Poly Haven"
+  }
+ ],
+ "sessions": {
+  "ses_01m7pyewereabscxzh2844xt1d": 2
+ },
+ "minutes": 3.0,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 2
+}

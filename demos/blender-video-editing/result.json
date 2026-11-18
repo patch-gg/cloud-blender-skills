@@ -1,0 +1,22 @@
+{
+ "skill": "blender-video-editing",
+ "prompt": "Cut all the skill demos into one short reel with crossfades and a title.",
+ "numbers": {
+  "clips": 28,
+  "frames_each": 20,
+  "crossfade_frames": 4,
+  "edit": {
+   "fps": 24,
+   "strips": 56
+  },
+  "clip_kb": 3174,
+  "seconds": 18.83
+ },
+ "assets": null,
+ "sessions": {
+  "ses_01m7q1j8gzenk9zwyennm47g86": 1
+ },
+ "credits": 1,
+ "minutes": 1.5,
+ "blender": "5.2.0 LTS (Patch cloud)"
+}

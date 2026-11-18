@@ -1,0 +1,96 @@
+{
+ "skill": "blender-rendering",
+ "prompt": "Render this still life in Workbench, EEVEE and Cycles, same shot, so I can compare them.",
+ "numbers": {
+  "engines": {
+   "workbench": {
+    "engine": "BLENDER_WORKBENCH",
+    "device": null,
+    "sec_per_image": 0.13,
+    "res": [
+     1280,
+     720
+    ],
+    "denoiser": null,
+    "view": "Standard"
+   },
+   "eevee": {
+    "engine": "BLENDER_EEVEE",
+    "device": null,
+    "sec_per_image": 0.42,
+    "res": [
+     1280,
+     720
+    ],
+    "denoiser": null,
+    "view": "AgX",
+    "samples": 32
+   },
+   "cycles": {
+    "engine": "CYCLES",
+    "device": "OPTIX",
+    "sec_per_image": 0.72,
+    "res": [
+     1280,
+     720
+    ],
+    "denoiser": "OPENIMAGEDENOISE",
+    "view": "AgX",
+    "samples": 64
+   }
+  },
+  "split": [
+   0.3533,
+   0.6817
+  ],
+  "frames": 96,
+  "qa_pass": 3,
+  "qa_checked": 6,
+  "qa_errors": [
+   "z-fighting: potted_plant_04_plant (3 overlapping coplanar tri pairs)",
+   "z-fighting: potted_plant_04_dirt<->potted_plant_04_ground (1 overlapping coplanar tri pairs)",
+   "z-fighting: wine_bottles_01_alsace (1080 overlapping coplanar tri pairs)",
+   "z-fighting: wine_bottles_01_burgundy (1272 overlapping coplanar tri pairs)"
+  ],
+  "clip_kb": 764,
+  "seconds": 4.0
+ },
+ "assets": [
+  {
+   "files": "demos/blender-rendering/work/assets/potted_plant_04.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/potted_plant_04",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-rendering/work/assets/antique_ceramic_vase_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/antique_ceramic_vase_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-rendering/work/assets/brass_goblets.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/brass_goblets",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-rendering/work/assets/wine_bottles_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/wine_bottles_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-rendering/work/assets/brass_vase_03.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/brass_vase_03",
+   "author": "Poly Haven"
+  }
+ ],
+ "sessions": {
+  "ses_01m7py5ff1e5hajy5vh73px8dq": 4
+ },
+ "minutes": 5.5,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 4
+}

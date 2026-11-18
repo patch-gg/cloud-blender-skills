@@ -1,0 +1,85 @@
+{
+ "skill": "blender-hardsurface-modeling",
+ "prompt": "Block out a sci-fi power cell, then finish it as a game-ready mid-poly prop: boolean cut-outs, bevels and weighted normals.",
+ "numbers": {
+  "parts": 9,
+  "cutters": 6,
+  "bevel_m": 0.008,
+  "tris_blockout": 2744,
+  "tris_final": 18152,
+  "stack": {
+   "Shell": [
+    "HS_Bool_Cut_Windows",
+    "HS_Bevel",
+    "HS_WeightedNormal"
+   ],
+   "Caps": [
+    "HS_Bool_Cut_CapRecess",
+    "HS_Bool_Cut_CapGrooves",
+    "HS_Bevel",
+    "HS_WeightedNormal"
+   ],
+   "Cradle": [
+    "HS_Bool_Cut_Saddle",
+    "HS_Bool_Cut_CradleHoles",
+    "HS_Bevel",
+    "HS_WeightedNormal"
+   ],
+   "Skid": [
+    "HS_Bool_Cut_SkidSlots",
+    "HS_Bevel",
+    "HS_WeightedNormal"
+   ],
+   "Core": [
+    "HS_Bevel",
+    "HS_WeightedNormal"
+   ],
+   "CoreRings": [
+    "HS_Bevel",
+    "HS_WeightedNormal"
+   ],
+   "Hubs": [
+    "HS_Bevel",
+    "HS_WeightedNormal"
+   ],
+   "Bolts": [
+    "HS_Bevel",
+    "HS_WeightedNormal"
+   ],
+   "Rails": [
+    "HS_Bevel",
+    "HS_WeightedNormal"
+   ]
+  },
+  "qa_pass": true,
+  "qa_errors": [],
+  "qa_warnings": [
+   "Shell: 96 n-gons",
+   "Caps: 264 n-gons",
+   "Core: 2 n-gons",
+   "CoreRings: 4 n-gons",
+   "Hubs: 4 n-gons",
+   "Bolts: 32 n-gons",
+   "Cradle: 4 n-gons",
+   "Skid: 2 n-gons"
+  ],
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "device": null,
+   "sec_per_image": 1.1,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 464,
+  "seconds": 5.0
+ },
+ "assets": null,
+ "sessions": {
+  "ses_01m7q11qasevrrdsht8dfgekyf": 4
+ },
+ "credits": 4,
+ "minutes": 4.6,
+ "blender": "5.2.0 LTS (Patch cloud)"
+}

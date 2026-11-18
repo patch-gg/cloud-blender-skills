@@ -1,0 +1,177 @@
+{
+ "skill": "blender-environment-kits",
+ "prompt": "Make a mountain valley with pine forest and rocks placed by slope and height, and fly over it at golden hour.",
+ "numbers": {
+  "terrain": {
+   "size_m": 600,
+   "res": 513,
+   "tris": 524288,
+   "height_range_m": [
+    0,
+    119.092
+   ],
+   "slope_mean_deg": 28.13,
+   "rock_pct": 32.9
+  },
+  "backdrop": {
+   "size_m": 2400,
+   "res": 257,
+   "tris": 131072,
+   "height_range_m": [
+    0,
+    296.284
+   ],
+   "slope_mean_deg": 25.26,
+   "rock_pct": 29.7
+  },
+  "pines": {
+   "instances": 3713,
+   "by_source": {
+    "tree_pineRoundA": 613,
+    "tree_pineTallC_detailed": 605,
+    "tree_pineTallD_detailed": 628,
+    "tree_pineTallA_detailed": 617,
+    "tree_pineRoundC": 657,
+    "tree_pineTallB_detailed": 593
+   },
+   "slope_max_deg": 29.99,
+   "height_range": [
+    16.356,
+    84.548
+   ],
+   "per_m2": 0.00872
+  },
+  "rocks": {
+   "instances": 375,
+   "by_source": {
+    "rock_largeD": 64,
+    "rock_largeF": 67,
+    "rock_tallA": 66,
+    "rock_tallB": 52,
+    "rock_largeB": 59,
+    "rock_largeA": 67
+   },
+   "slope_max_deg": 60.77,
+   "height_range": [
+    8.393,
+    111.926
+   ],
+   "per_m2": 0.00088
+  },
+  "mood": {
+   "time": "golden",
+   "key": {
+    "light": "ENV_Mood_Sun",
+    "strength": 7.1621,
+    "color": [
+     1,
+     0.727,
+     0.398
+    ],
+    "elevation": 14
+   },
+   "exposure": 1.42,
+   "fog": {
+    "object": "ENV_Mood_Fog",
+    "density": 0.00016,
+    "visibility_m": 25000,
+    "height_m": null
+   }
+  },
+  "qa_pass": true,
+  "qa_errors": [],
+  "qa_warnings": [
+   "524288 tris > max_tris 300000: z-fighting/floating checks skipped"
+  ],
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "sec_per_image": 0.4,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 945,
+  "seconds": 5.0
+ },
+ "assets": [
+  {
+   "files": "**/tree_pineTallA_detailed.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/tree_pineTallB_detailed.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/tree_pineTallC_detailed.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/tree_pineTallD_detailed.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/tree_pineRoundA.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/tree_pineRoundC.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/rock_largeA.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/rock_largeB.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/rock_largeD.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/rock_largeF.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/rock_tallA.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/rock_tallB.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  }
+ ],
+ "sessions": {
+  "ses_01m7q1a20nezta1z6k4jjb1082": 3
+ },
+ "credits": 3,
+ "minutes": 3.7,
+ "blender": "5.2.0 LTS (Patch cloud)"
+}

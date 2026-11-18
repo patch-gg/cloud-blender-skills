@@ -12,6 +12,7 @@ types, logged to the demo's commands.md. Standard library only (plus ffmpeg on P
 
 Env: BAS_SESSION (a session to use, else one per demo, saved in work/.cloud-blender.json),
 BAS_RENDER_SESSION (a GPU session for d.render; without it d.render uses `cloud.py render`, a GPU job),
+BAS_KEEP_SESSION=1 (don't stop the demo's session when the script ends, for iterating),
 PCH / PCH_ENV / PCH_CONFIG as for pch.
 """
 import atexit
@@ -48,6 +49,11 @@ class Demo:
             atexit.register(self._stop_on_exit)  # a run that dies halfway mustn't leave its session running
 
     def _stop_on_exit(self):
+        if not self.session:  # a first call that failed never told us its session: cloud.py saved it
+            try:
+                self.session = json.loads((self.work / ".cloud-blender.json").read_text("utf-8")).get("session")
+            except (OSError, ValueError):
+                pass
         if not self.finished and self.session and self.session != self.render_session:
             self.cloud("stop", quiet=True, check=False)
 
@@ -223,13 +229,15 @@ class Demo:
             if r.get("spent") is not None:
                 self.spent[self.session] = r["spent"]
         per = self.credits() if not stop else {k: v for k, v in self.spent.items()}
+        per.pop(self.render_session, None)  # the shared GPU session's total isn't this demo's cost
         credits = getattr(self, "asset_credits", [])
         if credits:
             lines = ["# credits", ""] + [f"- `{Path(c['files']).name}`: {c.get('author')}, {c.get('license')}, "
                                          f"{c.get('source')} (from Patch's asset library)" for c in credits]
             (self.root / "CREDITS.md").write_text("\n".join(lines) + "\n", "utf-8")
         result = {"skill": self.skill_name, "prompt": prompt, "numbers": numbers, "assets": credits or None,
-                  "sessions": per, "minutes": round((time.time() - self.t0) / 60, 1),
+                  "sessions": per, "credits": sum(v for v in per.values() if isinstance(v, (int, float))),
+                  "minutes": round((time.time() - self.t0) / 60, 1),
                   "blender": "5.2.0 LTS (Patch cloud)"}
         (self.root / "result.json").write_text(json.dumps(result, indent=1) + "\n", "utf-8")
         lines = [f"# {self.skill_name}: what ran", "",

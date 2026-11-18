@@ -1,0 +1,90 @@
+{
+ "skill": "blender-simulation",
+ "prompt": "Drop a pile of wooden crates and barrels into a corner, then throw a tarp over them.",
+ "numbers": {
+  "rigid": {
+   "bodies": 11,
+   "kg": 523.1,
+   "settled_min_z": 0.002,
+   "on_another": 1,
+   "frames": [
+    1,
+    120
+   ],
+   "bake_s": 2.1,
+   "to_keys": 11
+  },
+  "cloth": {
+   "preset": "denim",
+   "verts": 4225,
+   "frames": [
+    48,
+    120
+   ],
+   "bake_s": 19.3,
+   "colliders": 14,
+   "min_z": 0.021
+  },
+  "mood": {
+   "time": "afternoon",
+   "key": {
+    "light": "ENV_Mood_Sun",
+    "strength": 3.9834,
+    "color": [
+     1,
+     0.829,
+     0.606
+    ],
+    "elevation": 35
+   },
+   "exposure": 0.11
+  },
+  "qa_pass": true,
+  "qa_errors": [],
+  "qa_warnings": [
+   "asset lowest point z=0.0212 (not resting on ground plane z=0)"
+  ],
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "sec_per_image": 0.32,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 971,
+  "seconds": 5.0
+ },
+ "assets": [
+  {
+   "files": "**/wooden_crate_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/wooden_crate_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "**/wooden_crate_02.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/wooden_crate_02",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "**/wooden_military_crate.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/wooden_military_crate",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "**/barrel_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/Barrel_01",
+   "author": "Poly Haven"
+  }
+ ],
+ "sessions": {
+  "ses_01m7q1gtzney4t6w45rrbx64dc": 2
+ },
+ "credits": 2,
+ "minutes": 2.0,
+ "blender": "5.2.0 LTS (Patch cloud)"
+}

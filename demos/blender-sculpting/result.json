@@ -1,0 +1,75 @@
+{
+ "skill": "blender-sculpting",
+ "prompt": "Sculpt a weathered stone head from a primitive blockout, headless: fuse it, soften the forms, then add eroded-stone detail, and show each pass.",
+ "numbers": {
+  "passes": [
+   {
+    "label": "base",
+    "faces": null
+   },
+   {
+    "label": "remesh",
+    "ops": [
+     "remesh=0.02"
+    ],
+    "faces": 8250,
+    "tris": 16500
+   },
+   {
+    "label": "smooth",
+    "ops": [
+     "smooth=30",
+     "apply"
+    ],
+    "faces": 8250,
+    "tris": 16500
+   },
+   {
+    "label": "inflate",
+    "ops": [
+     "remesh=0.006",
+     "inflate=0.02",
+     "apply"
+    ],
+    "faces": 86360,
+    "tris": 172720
+   },
+   {
+    "label": "detail",
+    "ops": [
+     "detail=0.018,0.11",
+     "detail=0.005,0.025",
+     "smooth=1",
+     "apply"
+    ],
+    "faces": 86360,
+    "tris": 172720
+   }
+  ],
+  "final_tris": 172720,
+  "qa_pass": true,
+  "qa_errors": [],
+  "qa_warnings": [
+   "Moai: no UV map",
+   "asset lowest point z=-0.0301 (not resting on ground plane z=0)"
+  ],
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "device": null,
+   "sec_per_image": 0.75,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 810,
+  "seconds": 5.0
+ },
+ "assets": null,
+ "sessions": {
+  "ses_01m7q12as5evy99fhnqty5xjs5": 3
+ },
+ "credits": 3,
+ "minutes": 3.4,
+ "blender": "5.2.0 LTS (Patch cloud)"
+}

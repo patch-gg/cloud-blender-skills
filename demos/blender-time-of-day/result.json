@@ -1,0 +1,184 @@
+{
+ "skill": "blender-time-of-day",
+ "prompt": "Show this lighthouse at dawn, noon, golden hour, blue hour and on a foggy night.",
+ "numbers": {
+  "times": {
+   "dawn": {
+    "frames": [
+     1,
+     28
+    ],
+    "time": "sunrise",
+    "key": {
+     "light": "ENV_Mood_Sun",
+     "strength": 2.7335,
+     "color": [
+      1,
+      0.223,
+      0
+     ],
+     "elevation": 1
+    },
+    "exposure": 3.85,
+    "fog": null,
+    "exposure_offset": 0,
+    "lamp": 0,
+    "sec_per_image": 0.26
+   },
+   "noon": {
+    "frames": [
+     21,
+     52
+    ],
+    "time": "noon",
+    "key": {
+     "light": "ENV_Mood_Sun",
+     "strength": 4.0092,
+     "color": [
+      1,
+      0.86,
+      0.679
+     ],
+     "elevation": 60
+    },
+    "exposure": -0.01,
+    "fog": null,
+    "exposure_offset": 0,
+    "lamp": 0,
+    "sec_per_image": 0.25
+   },
+   "golden hour": {
+    "frames": [
+     45,
+     76
+    ],
+    "time": "golden",
+    "key": {
+     "light": "ENV_Mood_Sun",
+     "strength": 4.0932,
+     "color": [
+      1,
+      0.554,
+      0.158
+     ],
+     "elevation": 6
+    },
+    "exposure": 1.5,
+    "fog": null,
+    "exposure_offset": 0,
+    "lamp": 0,
+    "sec_per_image": 0.25
+   },
+   "blue hour": {
+    "frames": [
+     69,
+     100
+    ],
+    "time": "blue_hour",
+    "key": null,
+    "exposure": 9.3,
+    "fog": null,
+    "exposure_offset": -1.5,
+    "lamp": 2,
+    "sec_per_image": 0.28
+   },
+   "night": {
+    "frames": [
+     93,
+     120
+    ],
+    "time": "night",
+    "key": {
+     "light": "ENV_Mood_Moon",
+     "strength": 0.9032,
+     "color": [
+      0.72,
+      0.82,
+      1
+     ],
+     "elevation": 35
+    },
+    "exposure": 1.59,
+    "fog": {
+     "object": "ENV_Mood_Fog",
+     "density": 0.00559,
+     "visibility_m": 700,
+     "height_m": 15
+    },
+    "exposure_offset": 0,
+    "lamp": 1,
+    "sec_per_image": 3.45
+   }
+  },
+  "lighthouse_m": 16,
+  "lantern": {
+   "z": 12.47,
+   "radius": 1.24,
+   "glass_faces": 16
+  },
+  "qa_pass": true,
+  "qa_errors": [],
+  "qa_warnings": [
+   "Lighthouse: no UV map",
+   "Lighthouse: duplicate verts=4148 loose verts=0"
+  ],
+  "render": {
+   "engine": "CYCLES",
+   "samples": 64,
+   "device": "OPTIX",
+   "denoiser": "OPENIMAGEDENOISE"
+  },
+  "clip_kb": 657,
+  "seconds": 5.0
+ },
+ "assets": [
+  {
+   "files": "**/old-lighthouse-48ca6c.glb",
+   "license": "CC-BY-4.0",
+   "source": "https://polyfork.dev/asset/old-lighthouse-48ca6c",
+   "author": "Polyfork"
+  },
+  {
+   "files": "**/rock_largeA.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/rock_largeC.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/rock_largeE.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/rock_tallA.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/rock_tallB.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/rock_tallH.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  }
+ ],
+ "sessions": {
+  "ses_01m7q0fwe7ezrsjkjj2y6zp9se": 4
+ },
+ "minutes": 4.8,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 4
+}

@@ -1,0 +1,53 @@
+{
+ "skill": "blender-stylized-npr",
+ "prompt": "Make this knight cel-shaded: two-tone bands, cool shadows, a rim light and ink outlines, and show me each step next to the plain render.",
+ "numbers": {
+  "tris": 5800,
+  "merged_verts": 2324,
+  "stages": {
+   "Knight_bands": "--bands 2 --shadow-tint 0.55 0.55 0.55 --outline 0",
+   "Knight_tint": "--bands 2 --outline 0",
+   "Knight_rim": "--bands 2 --rim 0.5 --outline 0",
+   "Knight_outline": "--bands 2 --rim 0.5 --outline 0.01"
+  },
+  "key_light": "NPR_Key",
+  "view_transform": "Standard",
+  "outline": {
+   "modifier": "NPR_Outline",
+   "thickness_m": 0.01
+  },
+  "qa_pass": true,
+  "qa_errors": [],
+  "qa_warnings": [
+   "Knight_outline: unused material slot(s) ['NPR_M_Outline'] (extra draw calls in some exporters)",
+   "Knight_outline: 825 zero-area UV faces",
+   "Knight_outline: ~73.02% UV overlap (ok only if mirrored/stacked on purpose; bakes break)",
+   "Knight_outline: 4 edges with inconsistent face winding"
+  ],
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "device": null,
+   "sec_per_image": 0.17,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 584,
+  "seconds": 4.0
+ },
+ "assets": [
+  {
+   "files": "demos/blender-stylized-npr/work/assets/Knight.glb",
+   "license": "CC0-1.0",
+   "source": "https://kaylousberg.itch.io/kaykit-adventurers",
+   "author": "KayKit"
+  }
+ ],
+ "sessions": {
+  "ses_01m7pya85wej6vsc9mhk9pna5n": 2
+ },
+ "minutes": 2.4,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 2
+}

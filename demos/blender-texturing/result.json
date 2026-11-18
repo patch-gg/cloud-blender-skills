@@ -1,0 +1,64 @@
+{
+ "skill": "blender-texturing",
+ "prompt": "Make this jerry can look used: chipped paint on the edges, grime in the creases, dust on top, and a DIESEL stencil on the side.",
+ "numbers": {
+  "tris": 20022,
+  "layers": {
+   "wear": 0.5,
+   "grime": 0.85,
+   "dust": 0.6
+  },
+  "curvature": {
+   "convex_verts_pct": 54.2,
+   "concave_verts_pct": 20.6
+  },
+  "curvature_note": null,
+  "decal": {
+   "size_m": [
+    0.17,
+    0.053
+   ],
+   "offset_m": 0.002,
+   "subdiv": 16,
+   "gap_min_m": 0.00121,
+   "gap_max_m": 0.00312
+  },
+  "qa_pass": false,
+  "qa_errors": [
+   "z-fighting: JerryCan (449 overlapping coplanar tri pairs)"
+  ],
+  "zfighting": [
+   {
+    "where": "JerryCan",
+    "tri_pairs": 449
+   }
+  ],
+  "decal_zfight_pairs": 0,
+  "render": {
+   "engine": "CYCLES",
+   "device": "OPTIX",
+   "sec_per_image": 0.63,
+   "res": [
+    1280,
+    720
+   ],
+   "denoiser": "OPENIMAGEDENOISE"
+  },
+  "clip_kb": 489,
+  "seconds": 4.0
+ },
+ "assets": [
+  {
+   "files": "demos/blender-texturing/work/assets/metal_jerrycan.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/metal_jerrycan",
+   "author": "Poly Haven"
+  }
+ ],
+ "sessions": {
+  "ses_01m7pyemeheeg8antx074exzzm": 3
+ },
+ "minutes": 3.2,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 3
+}

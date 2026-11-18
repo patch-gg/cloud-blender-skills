@@ -1,0 +1,216 @@
+{
+ "skill": "blender-pipeline-automation",
+ "prompt": "Take this folder of mixed FBX, USDZ, .blend and glTF models, inventory it, QA every file and deliver them all as GLB.",
+ "numbers": {
+  "files_in": 15,
+  "inbox": {
+   "blend": 4,
+   "fbx": 4,
+   "glb": 3,
+   "usdz": 4
+  },
+  "inbox_mb": 32.0,
+  "make_inbox": {
+   "fbx": {
+    "files": 4,
+    "ok": 4,
+    "failed": [],
+    "sec": 0.9
+   },
+   "usdz": {
+    "files": 4,
+    "ok": 4,
+    "failed": [],
+    "sec": 0.8
+   },
+   "blend": {
+    "files": 4,
+    "ok": 4,
+    "failed": [],
+    "sec": 0.5
+   },
+   "glb": {
+    "files": 3,
+    "ok": 3,
+    "failed": [],
+    "sec": 0.6
+   }
+  },
+  "report": {
+   "files": 15,
+   "ok": 15,
+   "failed": [],
+   "sec": 0.9,
+   "tris": 136470,
+   "materials": 19,
+   "images": 49,
+   "missing_images": 0
+  },
+  "qa": {
+   "profile": "game",
+   "shards": 2,
+   "files": 15,
+   "pass": 7,
+   "flagged": [
+    "alarm_clock_01",
+    "korean_fire_extinguisher_01",
+    "measuring_tape_01",
+    "metal_toolbox",
+    "potted_plant_04",
+    "vintage_electric_kettle",
+    "watering_can_metal_01",
+    "wooden_bucket_01"
+   ],
+   "errors": {
+    "alarm_clock_01": [
+     "z-fighting"
+    ],
+    "measuring_tape_01": [
+     "z-fighting"
+    ],
+    "watering_can_metal_01": [
+     "360 zero-area UV faces",
+     "z-fighting"
+    ],
+    "wooden_bucket_01": [
+     "z-fighting"
+    ],
+    "korean_fire_extinguisher_01": [
+     "degenerate faces=1 zero-len edges=0",
+     "z-fighting"
+    ],
+    "metal_toolbox": [
+     "z-fighting"
+    ],
+    "potted_plant_04": [
+     "z-fighting"
+    ],
+    "vintage_electric_kettle": [
+     "z-fighting"
+    ]
+   },
+   "sec": [
+    5.4,
+    8.1
+   ],
+   "failed": []
+  },
+  "deliver": {
+   "files": 15,
+   "ok": 15,
+   "failed": [],
+   "sec": 2.5,
+   "glb": 15,
+   "mb": 38.8
+  },
+  "pulled_ok": true,
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "sec_per_image": 0.45,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 352,
+  "seconds": 4.0
+ },
+ "assets": [
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/alarm_clock_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/alarm_clock_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/wooden_bucket_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/wooden_bucket_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/korean_fire_extinguisher_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/korean_fire_extinguisher_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/watering_can_metal_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/watering_can_metal_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/potted_plant_04.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/potted_plant_04",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/rubber_duck_toy.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/rubber_duck_toy",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/metal_toolbox.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/metal_toolbox",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/barrel_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/Barrel_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/vintage_electric_kettle.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/vintage_electric_kettle",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/wicker_basket_02.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/wicker_basket_02",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/baseball_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/baseball_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/pot_enamel_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/pot_enamel_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/garden_sprinkler_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/garden_sprinkler_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/american_football.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/american_football",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "demos/blender-pipeline-automation/work/assets/measuring_tape_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/measuring_tape_01",
+   "author": "Poly Haven"
+  }
+ ],
+ "sessions": {
+  "ses_01m7pyy8zzezbradqfdyjwcng7": 5
+ },
+ "minutes": 6.0,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 5
+}

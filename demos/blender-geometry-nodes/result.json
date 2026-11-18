@@ -1,0 +1,68 @@
+{
+ "skill": "blender-geometry-nodes",
+ "prompt": "Build a geometry nodes setup that scatters a forest over this island from a seed, and animate its radius so the forest grows out from the middle.",
+ "numbers": {
+  "tree": "GN_Forest",
+  "nodes": 30,
+  "links": 43,
+  "node_warnings": null,
+  "inputs_animated": [
+   "Radius",
+   "Ring Width"
+  ],
+  "trees_at_full": 173,
+  "instanced_tris": 36270,
+  "kinds": 5,
+  "island_qa_pass": true,
+  "island_qa_errors": [],
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "device": null,
+   "sec_per_image": 0.46,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 632,
+  "seconds": 5.0
+ },
+ "assets": [
+  {
+   "files": "**/tree_pineDefaultA.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/tree_pineDefaultB.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/tree_cone.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/tree_detailed.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  },
+  {
+   "files": "**/plant_bushDetailed.glb",
+   "license": "CC0-1.0",
+   "source": "https://kenney.nl/assets/nature-kit",
+   "author": "Kenney"
+  }
+ ],
+ "sessions": {
+  "ses_01m7q0vpkrebzbzkqn6djqa564": 2
+ },
+ "credits": 2,
+ "minutes": 2.3,
+ "blender": "5.2.0 LTS (Patch cloud)"
+}

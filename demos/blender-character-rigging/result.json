@@ -1,0 +1,91 @@
+{
+ "skill": "blender-character-rigging",
+ "prompt": "Rig this character with Rigify, skin it, give me a Unity-ready game skeleton and stress-test the deformation.",
+ "numbers": {
+  "character": {
+   "verts": 15595,
+   "tris": 30348,
+   "height_m": 1.973
+  },
+  "metarig_fit_scale": 0.9967,
+  "joints_placed": 29,
+  "control_rig": {
+   "bones": 222,
+   "deform_bones": 35
+  },
+  "skin": {
+   "method": "auto",
+   "groups": 35,
+   "max_influences": 4,
+   "unweighted_verts": 0,
+   "filled_from_nearest": 250
+  },
+  "game_skeleton": {
+   "name": "GAME_RIG_Body",
+   "bones": 36,
+   "retargeted_meshes": [
+    "Body"
+   ]
+  },
+  "rig_check": {
+   "pass": true,
+   "errors": [],
+   "warnings": [
+    "35 deform bones have constraints - bake animation before export",
+    "Body: ~4 sampled verts with asymmetric L/R weights (mirror weights?)"
+   ],
+   "unity_humanoid_unmapped": []
+  },
+  "stress_poses": {
+   "frames": [
+    1,
+    10,
+    20,
+    30,
+    40,
+    50
+   ],
+   "missing_roles": [],
+   "shown_at": [
+    1,
+    21,
+    41,
+    61,
+    81,
+    101
+   ],
+   "crouch_drop_m": 0.585
+  },
+  "qa": {
+   "pass": false,
+   "errors": [
+    "z-fighting: Body (53 overlapping coplanar tri pairs)"
+   ]
+  },
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "device": null,
+   "sec_per_image": 0.38,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 449,
+  "seconds": 5.0
+ },
+ "assets": [
+  {
+   "files": "demos/blender-character-rigging/work/assets/human-0255.glb",
+   "license": "CC0-1.0",
+   "source": "https://github.com/makehumancommunity/mpfb2/tree/d0a32e57a7f915cb2f2b95410e2117648c7bbb7e",
+   "author": "MakeHuman (MPFB)"
+  }
+ ],
+ "sessions": {
+  "ses_01m7py5sz2egnb58mf355km6v2": 2
+ },
+ "minutes": 2.6,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 2
+}

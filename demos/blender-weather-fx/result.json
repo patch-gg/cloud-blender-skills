@@ -1,0 +1,155 @@
+{
+ "skill": "blender-weather-fx",
+ "prompt": "Make this street a rainy night with puddles and a lightning strike.",
+ "numbers": {
+  "rain": {
+   "count": 297592,
+   "box_m": [
+    22.04,
+    22.5,
+    15
+   ],
+   "speed_ms": 8.88,
+   "streak_m": 0.185,
+   "life_s": 0.94,
+   "loop_frames": 90,
+   "ground": [
+    "Road",
+    "Sidewalk",
+    "Kerb",
+    "Car"
+   ]
+  },
+  "wet_porous": {
+   "materials": [
+    "M_Asphalt",
+    "M_Concrete",
+    "M_Kerb",
+    "covered_car",
+    "modular_urban_apartments_facade_plaster",
+    "modular_urban_apartments_facade_trim_01",
+    "modular_urban_apartments_facade_trim_02",
+    "trashbag",
+    "trashbag.001"
+   ],
+   "params": {
+    "Wetness": 0.8,
+    "Puddles": 0.45,
+    "Ripples": 1,
+    "Streaks": 0.5,
+    "Porosity": 0.7,
+    "Scale": 3
+   }
+  },
+  "wet_hard": {
+   "materials": [
+    "fire_hydrant",
+    "fire_hydrant_aged",
+    "metal_trash_can",
+    "metal_trash_can_rust",
+    "modular_urban_apartments_facade_glass",
+    "modular_urban_apartments_facade_objects",
+    "street_lamp_01",
+    "street_lamp_01.001",
+    "street_lamp_01.002",
+    "street_lamp_01.003",
+    "street_lamp_01_glass",
+    "street_lamp_01_glass.001",
+    "street_lamp_01_glass.002",
+    "street_lamp_01_glass.003"
+   ],
+   "params": {
+    "Wetness": 0.8,
+    "Streaks": 0.3,
+    "Porosity": 0.15,
+    "Scale": 3
+   }
+  },
+  "lightning": {
+   "flash_frames": [
+    46
+   ],
+   "keys": 11,
+   "peak_strength": 2,
+   "bolt": "ENV_Storm_Bolt",
+   "sky_flash": "ENV_World"
+  },
+  "mood": {
+   "time": "moonless",
+   "exposure": 4.49,
+   "fog": {
+    "object": "ENV_Mood_Fog",
+    "density": 0.00978,
+    "visibility_m": 400,
+    "height_m": null
+   }
+  },
+  "exposure_offset": -3,
+  "facade_pieces": 132,
+  "qa_pass": true,
+  "qa_errors": [],
+  "qa_warnings": [
+   "Road: 3 zero-area UV faces",
+   "Sidewalk: 3 zero-area UV faces",
+   "Kerb: 3 zero-area UV faces",
+   "hidden back-to-back faces: Sidewalk<->Kerb (2 pairs) - delete to save tris",
+   "asset lowest point z=-0.2 (not resting on ground plane z=0)"
+  ],
+  "render": {
+   "engine": "CYCLES",
+   "device": "OPTIX",
+   "sec_per_image": 4.61,
+   "res": [
+    1280,
+    720
+   ],
+   "denoiser": "OPENIMAGEDENOISE"
+  },
+  "clip_kb": 1076,
+  "seconds": 3.75
+ },
+ "assets": [
+  {
+   "files": "**/modular_urban_apartments_facade.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/modular_urban_apartments_facade",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "**/street_lamp_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/street_lamp_01",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "**/fire_hydrant.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/fire_hydrant",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "**/metal_trash_can.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/metal_trash_can",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "**/trashbag.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/trashbag",
+   "author": "Poly Haven"
+  },
+  {
+   "files": "**/covered_car.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/covered_car",
+   "author": "Poly Haven"
+  }
+ ],
+ "sessions": {
+  "ses_01m7q0sy6tegxamhzdpt6e48g0": 5
+ },
+ "credits": 5,
+ "minutes": 8.1,
+ "blender": "5.2.0 LTS (Patch cloud)"
+}

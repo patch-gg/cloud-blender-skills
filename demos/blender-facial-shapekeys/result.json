@@ -1,0 +1,103 @@
+{
+ "skill": "blender-facial-shapekeys",
+ "prompt": "Set up ARKit 52 blendshapes and visemes on this head, split the blink and smile into left and right, mirror the brows, and give me sliders to animate it.",
+ "numbers": {
+  "head": {
+   "verts": 5940,
+   "faces": 5896,
+   "islands": 12
+  },
+  "keys_created": {
+   "arkit": 52,
+   "visemes": 15
+  },
+  "keys_sculpted": 61,
+  "split": [
+   [
+    "eyeBlinkLeft",
+    "eyeBlinkRight"
+   ],
+   [
+    "mouthSmileLeft",
+    "mouthSmileRight"
+   ]
+  ],
+  "mirrored": {
+   "from": "browDownLeft",
+   "to": "browDownRight",
+   "op": [
+    "FINISHED"
+   ]
+  },
+  "report": {
+   "keys": 67,
+   "unsculpted": [
+    "viseme_sil"
+   ],
+   "arkit_missing": [],
+   "max_offset_mm": {
+    "jawOpen": 33.4,
+    "mouthSmileLeft": 12.1,
+    "eyeBlinkLeft": 30.5,
+    "browInnerUp": 14.0,
+    "viseme_O": 19.5,
+    "viseme_E": 12.4,
+    "browDownRight": 13.7,
+    "cheekPuff": 16.1
+   }
+  },
+  "drivers": {
+   "controller": "FaceCtrl",
+   "count": 67
+  },
+  "clip_keys": [
+   [
+    "jawOpen"
+   ],
+   [
+    "mouthSmileLeft",
+    "mouthSmileRight"
+   ],
+   [
+    "eyeBlinkLeft"
+   ],
+   [
+    "browInnerUp"
+   ],
+   [
+    "viseme_O"
+   ],
+   [
+    "viseme_E"
+   ],
+   [
+    "browDownLeft",
+    "browDownRight"
+   ],
+   [
+    "cheekPuff"
+   ]
+  ],
+  "qa_pass": true,
+  "qa_errors": [],
+  "qa_warnings": 1,
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "device": null,
+   "sec_per_image": 1.06,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 289,
+  "seconds": 5.0
+ },
+ "assets": null,
+ "sessions": {
+  "ses_01m7q09e5ded0838y9g4wrr3rv": 3
+ },
+ "minutes": 4.0,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 3
+}

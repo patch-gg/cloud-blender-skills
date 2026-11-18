@@ -1,0 +1,105 @@
+{
+ "skill": "blender-clothing",
+ "prompt": "Make a puffer vest for this character over his t-shirt, skinned to his rig, and check it doesn't clip when he moves.",
+ "numbers": {
+  "body": {
+   "meshes": [
+    "Body",
+    "Shirt"
+   ],
+   "shirt_verts": 2822
+  },
+  "shirt_prep": {
+   "crumpled_verts": 91,
+   "relaxed_verts": 214,
+   "body_panels": 2,
+   "region_verts": 2302
+  },
+  "skin": {
+   "Body": {
+    "method": "auto",
+    "unweighted_verts": 0,
+    "max_influences": 4
+   },
+   "Shirt": {
+    "method": "auto",
+    "unweighted_verts": 0,
+    "max_influences": 4
+   }
+  },
+  "garment": {
+   "garment": "Vest",
+   "region_verts": 2302,
+   "offset_m": 0.012,
+   "thickness_m": 0.01,
+   "vertex_groups": 35,
+   "armature": "GAME_RIG_Body",
+   "hidden_verts": 2222,
+   "covered_verts": 79,
+   "poke_verts": 0,
+   "poke_max_m": 0
+  },
+  "poke_check_in_stress_poses": {
+   "arms raised 70": {
+    "covered_verts": 49,
+    "poke_verts": 5,
+    "poke_max_m": 0.07043
+   },
+   "elbows 130": {
+    "covered_verts": 102,
+    "poke_verts": 0,
+    "poke_max_m": 0
+   },
+   "knee 120": {
+    "covered_verts": 79,
+    "poke_verts": 0,
+    "poke_max_m": 0
+   },
+   "crouch": {
+    "covered_verts": 79,
+    "poke_verts": 0,
+    "poke_max_m": 0
+   },
+   "twist 45": {
+    "covered_verts": 78,
+    "poke_verts": 0,
+    "poke_max_m": 0
+   }
+  },
+  "poke_check_in_clip_poses": {
+   "62": 0,
+   "80": 0,
+   "96": 0
+  },
+  "stress_missing_roles": [],
+  "qa": {
+   "pass": true,
+   "errors": [],
+   "vest_tris": 53760
+  },
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "sec_per_image": 1.8,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 348,
+  "seconds": 5.0
+ },
+ "assets": [
+  {
+   "files": "**/human-0255.glb",
+   "license": "CC0-1.0",
+   "source": "https://github.com/makehumancommunity/mpfb2/tree/d0a32e57a7f915cb2f2b95410e2117648c7bbb7e",
+   "author": "MakeHuman (MPFB)"
+  }
+ ],
+ "sessions": {
+  "ses_01m7q029x4e9vtjrk2rftztd0x": 6
+ },
+ "minutes": 7.5,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 6
+}

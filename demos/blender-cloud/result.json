@@ -50,9 +50,9 @@
   "ses_01m7pz8r2yej7rfae4h24xmy1p": 0,
   "ses_01m7pz8r2xewy8cg9s9gkpcs23": 0,
   "ses_01m7pz8r2yej7rfae0exf60dx5": 0,
-  "ses_01m7pz8r2yej7rfadxdymhztzb": 0,
-  "ses_01m7pvay0ge0yrmvrrbd9mpj2h": 467
+  "ses_01m7pz8r2yej7rfadxdymhztzb": 0
  },
  "minutes": 3.9,
- "blender": "5.2.0 LTS (Patch cloud)"
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 3
 }

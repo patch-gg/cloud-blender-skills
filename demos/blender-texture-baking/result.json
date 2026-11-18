@@ -1,0 +1,50 @@
+{
+ "skill": "blender-texture-baking",
+ "prompt": "Bake this high-poly crate down to a 12-triangle box: normal, AO and curvature maps, and show me the low poly with the bake next to the high.",
+ "numbers": {
+  "high_tris": 13204,
+  "low_tris": 12,
+  "maps": [
+   "ao",
+   "basecolor",
+   "curvature",
+   "metallic",
+   "normal",
+   "orm",
+   "roughness"
+  ],
+  "bake": {
+   "device": "CPU",
+   "res": 1024,
+   "extrusion": 0.02078
+  },
+  "material_maps": {
+   "basecolor": "T_Crate_BC.png",
+   "orm": "T_Crate_ORM.png",
+   "normal": "T_Crate_N.png"
+  },
+  "qa_high_pass": true,
+  "qa_low_pass": true,
+  "qa_pass": true,
+  "qa_errors": [],
+  "render": {
+   "engine": "CYCLES",
+   "device": "OPTIX",
+   "sec_per_image": 1.07,
+   "res": [
+    1280,
+    720
+   ],
+   "denoiser": "OPENIMAGEDENOISE"
+  },
+  "clip_kb": 421,
+  "seconds": 4.0
+ },
+ "assets": null,
+ "sessions": {
+  "ses_01m7pyr6jpewgbkqynbcyrcjvt": 3
+ },
+ "minutes": 4.2,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 3
+}

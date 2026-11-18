@@ -1,0 +1,293 @@
+{
+ "skill": "blender-workflow-recipes",
+ "prompt": "Make a game-ready jerry can: high-poly bake to a low-poly mesh with worn paint, LODs, and export it for Unreal and the web.",
+ "numbers": {
+  "blockout": {
+   "tris": 524,
+   "body_mm": [
+    345,
+    165,
+    470
+   ],
+   "overall_mm": [
+    357,
+    165,
+    540
+   ]
+  },
+  "high_tris": 12044,
+  "low_tris": 524,
+  "uv": {
+   "seams": 296,
+   "fallback": null
+  },
+  "texel_density": {
+   "px_per_m": 1993.6,
+   "spread": 1,
+   "islands": 44,
+   "res": 2048
+  },
+  "qa_before_bake": {
+   "low": {
+    "pass": true,
+    "uv_coverage_pct": 65.7
+   },
+   "high": {
+    "pass": true,
+    "warnings": 9
+   }
+  },
+  "bake": {
+   "maps": [
+    "ao",
+    "curvature",
+    "id",
+    "normal",
+    "orm"
+   ],
+   "res": 2048,
+   "device": "CPU",
+   "extrusion_m": 0.01335
+  },
+  "self_bake": [
+   "basecolor",
+   "metallic",
+   "roughness"
+  ],
+  "texture_set": [
+   "ao",
+   "basecolor",
+   "metallic",
+   "normal",
+   "roughness"
+  ],
+  "budget": {
+   "name": "web",
+   "pass": true,
+   "tris": 524,
+   "draw_calls": 1,
+   "texture_vram_mb": 106.7
+  },
+  "lods_made": [
+   524,
+   262,
+   130,
+   64
+  ],
+  "lod_tris": [
+   524,
+   262,
+   130,
+   56
+  ],
+  "qa": {
+   "caught": {
+    "lod": 3,
+    "verts": 6,
+    "at": [
+     -0.088,
+     0.0,
+     0.491
+    ],
+    "tris_before": 64,
+    "tris_after": 56
+   },
+   "lods": {
+    "SM_JerryCan_LOD0": {
+     "pass": true,
+     "errors": []
+    },
+    "SM_JerryCan_LOD1": {
+     "pass": true,
+     "errors": []
+    },
+    "SM_JerryCan_LOD2": {
+     "pass": true,
+     "errors": []
+    },
+    "SM_JerryCan_LOD3": {
+     "pass": false,
+     "errors": [
+      "floating/detached part in SM_JerryCan_LOD3 (6 verts at [-0.088, 0.0, 0.491])"
+     ],
+     "after_fix": {
+      "pass": true,
+      "errors": []
+     }
+    }
+   },
+   "pass": true
+  },
+  "tris_per_stage": {
+   "blockout": 524,
+   "high (bevels)": 12044,
+   "low (bake target)": 524,
+   "lod0": 524,
+   "lod1": 262,
+   "lod2": 130,
+   "lod3": 56
+  },
+  "export": {
+   "files": {
+    "SM_JerryCan.glb": 493.9,
+    "SM_JerryCan.fbx": 154.1
+   },
+   "glb": {
+    "nodes": 1,
+    "meshes": 1,
+    "materials": 1,
+    "images": 3,
+    "animations": 0,
+    "skins": 0,
+    "tris": 524,
+    "extensions": [
+     "EXT_meshopt_compression",
+     "EXT_texture_webp"
+    ],
+    "animation_names": []
+   },
+   "verified": {
+    "SM_JerryCan.glb": {
+     "meshes": {
+      "SM_JerryCan_LOD0": {
+       "tris": 524,
+       "dims_mm": [
+        357,
+        165,
+        540
+       ],
+       "scale": [
+        1.0,
+        1.0,
+        1.0
+       ]
+      }
+     },
+     "images": 3
+    },
+    "SM_JerryCan.fbx": {
+     "meshes": {
+      "SM_JerryCan_LOD0": {
+       "tris": 524,
+       "dims_mm": [
+        357,
+        165,
+        540
+       ],
+       "scale": [
+        1.0,
+        1.0,
+        1.0
+       ]
+      },
+      "SM_JerryCan_LOD1": {
+       "tris": 262,
+       "dims_mm": [
+        357,
+        165,
+        540
+       ],
+       "scale": [
+        1.0,
+        1.0,
+        1.0
+       ]
+      },
+      "SM_JerryCan_LOD2": {
+       "tris": 130,
+       "dims_mm": [
+        357,
+        165,
+        540
+       ],
+       "scale": [
+        1.0,
+        1.0,
+        1.0
+       ]
+      },
+      "SM_JerryCan_LOD3": {
+       "tris": 56,
+       "dims_mm": [
+        359,
+        165,
+        540
+       ],
+       "scale": [
+        1.0,
+        1.0,
+        1.0
+       ]
+      }
+     },
+     "images": 4
+    }
+   }
+  },
+  "stages": {
+   "blockout": [
+    1,
+    12
+   ],
+   "bevels": [
+    13,
+    24
+   ],
+   "uvs": [
+    25,
+    36
+   ],
+   "bake": [
+    37,
+    48
+   ],
+   "material": [
+    49,
+    60
+   ],
+   "wear": [
+    61,
+    72
+   ],
+   "lods": [
+    73,
+    86
+   ],
+   "qa_caught": [
+    87,
+    95
+   ],
+   "qa": [
+    96,
+    105
+   ],
+   "export": [
+    106,
+    118
+   ],
+   "turntable": [
+    119,
+    184
+   ]
+  },
+  "render": {
+   "engine": "CYCLES",
+   "device": "OPTIX",
+   "sec_per_image": 0.68,
+   "res": [
+    1280,
+    720
+   ],
+   "denoiser": "OPENIMAGEDENOISE"
+  },
+  "clip_kb": 954,
+  "seconds": 7.67
+ },
+ "assets": null,
+ "sessions": {
+  "ses_01m7pznk5fejj94bn53dhx0w3s": 7
+ },
+ "minutes": 8.6,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 7
+}

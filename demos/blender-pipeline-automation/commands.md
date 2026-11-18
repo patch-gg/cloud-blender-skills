@@ -1,0 +1,21 @@
+# blender-pipeline-automation: what ran
+
+Every step ran on Patch's cloud Blender through `cloud.py`. `$BOX` is a GPU session used
+for the final render; without one, `cloud.py render` sends the same .blend to a GPU job.
+
+```bash
+pch assets add polyhaven:alarm_clock_01 polyhaven:wooden_bucket_01 polyhaven:korean_fire_extinguisher_01 polyhaven:watering_can_metal_01 polyhaven:potted_plant_04 polyhaven:rubber_duck_toy polyhaven:metal_toolbox polyhaven:Barrel_01 polyhaven:vintage_electric_kettle polyhaven:wicker_basket_02 polyhaven:baseball_01 polyhaven:pot_enamel_01 polyhaven:garden_sprinkler_01 polyhaven:american_football polyhaven:measuring_tape_01 --to assets
+python <skills_dir>/blender-cloud/scripts/cloud.py run --process '<skills_dir>/blender-pipeline-automation/scripts/batch_process.py' -- --in assets/rubber_duck_toy.glb assets/baseball_01.glb assets/american_football.glb assets/wicker_basket_02.glb --op convert --to fbx --out inbox/ --set embed_textures=true path_mode=COPY
+python <skills_dir>/blender-cloud/scripts/cloud.py run --process '<skills_dir>/blender-pipeline-automation/scripts/batch_process.py' -- --in assets/korean_fire_extinguisher_01.glb assets/watering_can_metal_01.glb assets/vintage_electric_kettle.glb assets/potted_plant_04.glb --op convert --to usdz --out inbox/
+python <skills_dir>/blender-cloud/scripts/cloud.py run --process '<skills_dir>/blender-pipeline-automation/scripts/batch_process.py' -- --in assets/metal_toolbox.glb assets/alarm_clock_01.glb assets/garden_sprinkler_01.glb assets/wooden_bucket_01.glb --op convert --to blend --out inbox/
+python <skills_dir>/blender-cloud/scripts/cloud.py run --process '<skills_dir>/blender-pipeline-automation/scripts/batch_process.py' -- --in assets/barrel_01.glb assets/pot_enamel_01.glb assets/measuring_tape_01.glb --op convert --to glb --out inbox/
+python <skills_dir>/blender-cloud/scripts/cloud.py run --process '<skills_dir>/blender-pipeline-automation/scripts/batch_process.py' -- --in inbox/ --op report
+python <skills_dir>/blender-cloud/scripts/cloud.py run --process '<skills_dir>/blender-pipeline-automation/scripts/batch_process.py' -- --in inbox/ --op script --script /work/_skills/blender-asset-qa/scripts/qa_check.py --kwargs '{"profile":"game"}' --shard 0/2
+python <skills_dir>/blender-cloud/scripts/cloud.py run --process '<skills_dir>/blender-pipeline-automation/scripts/batch_process.py' -- --in inbox/ --op script --script /work/_skills/blender-asset-qa/scripts/qa_check.py --kwargs '{"profile":"game"}' --shard 1/2
+python <skills_dir>/blender-cloud/scripts/cloud.py run --process '<skills_dir>/blender-pipeline-automation/scripts/batch_process.py' -- --in inbox/ --op convert --to glb --out delivered/
+python <skills_dir>/blender-cloud/scripts/cloud.py run scene.py -- --dir delivered --flagged alarm_clock_01 korean_fire_extinguisher_01 measuring_tape_01 metal_toolbox potted_plant_04 vintage_electric_kettle watering_can_metal_01 wooden_bucket_01
+python <skills_dir>/blender-cloud/scripts/cloud.py run '<skills_dir>/blender-lighting-lookdev/scripts/turntable.py' -- --objects Display alarm_clock_01 houd_hand minute_hand second_hand american_football _02_low wicker_basket_02_base wicker_basket_02_lid HaworthiaScan_Model_2_001 Mesh Plane_116 Plane_118 Barrel_01 metal_toolbox metal_toolbox_handle metal_toolbox_handle_latch_l metal_toolbox_handle_latch_r metal_toolbox_lid metal_toolbox_tray rubber_duck_toy Circle_012 baseball_01 wooden_bucket_01 wooden_bucket_01_handle pot_enamel_01_base pot_enamel_01_lid Cylinder garden_sprinkler_01_body_main garden_sprinkler_01_nozel_left garden_sprinkler_01_nozel_right garden_sprinkler_01_spinner garden_sprinkler_01_wheels measuring_tape_01 --rig studio --backdrop --frames 96 --lens 50 --elevation 22
+python <skills_dir>/blender-cloud/scripts/cloud.py run present.py
+python <skills_dir>/blender-cloud/scripts/cloud.py look -o look.jpg --engine eevee
+python <skills_dir>/blender-cloud/scripts/cloud.py --session $BOX --timeout 1800 run --process --no-pull --blend blender-pipeline-automation/work/demo.blend '<skills_dir>/blender-rendering/scripts/render_batch.py' -- --out '//render/f_####' --format PNG --device GPU --frames 1-96 --engine BLENDER_EEVEE --preset final --samples 32 --res 1280 720 --percent 100
+```

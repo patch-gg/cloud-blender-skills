@@ -1,0 +1,104 @@
+{
+ "skill": "blender-game-optimization",
+ "prompt": "This statue is too heavy for a mobile game: make LODs and tell me which one fits the budget.",
+ "numbers": {
+  "asset": "polyhaven:horse_statue_01",
+  "source_tris": 22388,
+  "source_verts": 12592,
+  "budget": {
+   "platform": "mobile",
+   "prop_tris": 3000,
+   "source_over": [
+    "tris 22388 > 3000"
+   ]
+  },
+  "cleanup_removed_verts": 1377,
+  "lods": [
+   {
+    "lod": 0,
+    "tris": 22340,
+    "verts": 11215,
+    "ratio": 1.0,
+    "fits_mobile": false,
+    "qa_pass": true,
+    "qa_errors_first": [],
+    "qa_fixed": null,
+    "qa_warnings": [
+     "hidden back-to-back faces: SM_Horse_LOD0 (15 pairs) - delete to save tris"
+    ]
+   },
+   {
+    "lod": 1,
+    "tris": 11170,
+    "verts": 5630,
+    "ratio": 0.5,
+    "fits_mobile": false,
+    "qa_pass": true,
+    "qa_errors_first": [],
+    "qa_fixed": null,
+    "qa_warnings": [
+     "hidden back-to-back faces: SM_Horse_LOD1 (2 pairs) - delete to save tris"
+    ]
+   },
+   {
+    "lod": 2,
+    "tris": 5584,
+    "verts": 2833,
+    "ratio": 0.25,
+    "fits_mobile": false,
+    "qa_pass": true,
+    "qa_errors_first": [],
+    "qa_fixed": null,
+    "qa_warnings": []
+   },
+   {
+    "lod": 3,
+    "tris": 2789,
+    "verts": 1423,
+    "ratio": 0.125,
+    "fits_mobile": true,
+    "qa_pass": true,
+    "qa_errors_first": [
+     "z-fighting: SM_Horse_LOD3 (2 overlapping coplanar tri pairs)"
+    ],
+    "qa_fixed": {
+     "removed_tris": 2,
+     "tris": 2789
+    },
+    "qa_warnings": []
+   }
+  ],
+  "fits": [
+   "SM_Horse_LOD3"
+  ],
+  "draw_calls_est": 1,
+  "texture_vram_mb_uncompressed": 16,
+  "qa_pass": 4,
+  "qa_checked": 4,
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "device": null,
+   "sec_per_image": 0.43,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 910,
+  "seconds": 4.0
+ },
+ "assets": [
+  {
+   "files": "**/horse_statue_01.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/horse_statue_01",
+   "author": "Poly Haven"
+  }
+ ],
+ "sessions": {
+  "ses_01m7q0s2szeprssxxn9vb1revn": 2
+ },
+ "minutes": 2.6,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 2
+}

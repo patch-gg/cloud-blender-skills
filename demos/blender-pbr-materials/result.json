@@ -29,9 +29,9 @@
  },
  "assets": null,
  "sessions": {
-  "ses_01m7pvkz9hem0vpqn5d94d767n": 2,
-  "ses_01m7pvay0ge0yrmvrrbd9mpj2h": 34
+  "ses_01m7pvkz9hem0vpqn5d94d767n": 2
  },
  "minutes": 2.9,
- "blender": "5.2.0 LTS (Patch cloud)"
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 2
 }

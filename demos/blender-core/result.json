@@ -1,0 +1,54 @@
+{
+ "skill": "blender-core",
+ "prompt": "Build a little retro rocket in Blender one step at a time, check each step, and verify it at the end.",
+ "numbers": {
+  "blender": "5.2.0 LTS",
+  "engines": [
+   "BLENDER_EEVEE",
+   "BLENDER_WORKBENCH",
+   "CYCLES"
+  ],
+  "steps": [
+   "body",
+   "nose",
+   "fins",
+   "window",
+   "paint"
+  ],
+  "looks": 6,
+  "objects": 8,
+  "tris": 9348,
+  "height_m": 1.37,
+  "ground_z": 0,
+  "materials": [
+   "M_Body",
+   "M_Chrome",
+   "M_Glass",
+   "M_Nozzle",
+   "M_Red"
+  ],
+  "qa_profile": "game",
+  "qa_pass": true,
+  "qa_errors": [],
+  "qa_warnings": [],
+  "review_sheet": "review_wire.png",
+  "review_sheet_kb": 814,
+  "render": {
+   "engine": "BLENDER_EEVEE",
+   "sec_per_image": 0.63,
+   "res": [
+    1280,
+    720
+   ]
+  },
+  "clip_kb": 223,
+  "seconds": 5.0
+ },
+ "assets": null,
+ "sessions": {
+  "ses_01m7pwtz9ee7e95qd6q3c1n2ng": 3
+ },
+ "minutes": 3.2,
+ "blender": "5.2.0 LTS (Patch cloud)",
+ "credits": 3
+}
