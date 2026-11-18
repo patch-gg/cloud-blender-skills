@@ -132,7 +132,8 @@ class Demo:
 
     def save(self, rel="demo.blend"):
         """Save the live scene to work/<rel> (packed) and pull it here."""
-        code = ("import bpy\ntry:\n    bpy.ops.file.pack_all()\nexcept RuntimeError:\n    pass\n"
+        code = ("import bpy, os\ntry:\n    bpy.ops.file.pack_all()\nexcept RuntimeError:\n    pass\n"
+                f"os.makedirs(os.path.dirname('/work/{rel}'), exist_ok=True)\n"
                 f"bpy.ops.wm.save_as_mainfile(filepath='/work/{rel}', copy=True)")
         self.expr(code, quiet=True)
         self.cloud("pull", rel, quiet=True)

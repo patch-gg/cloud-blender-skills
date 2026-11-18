@@ -17,14 +17,17 @@ from demo import SKILLS, Demo  # noqa: E402
 KIT = Path.home() / "patch/brand/handoff/out/04 Type/Funnel Sans/FunnelSans[wght].ttf"  # labels only
 LOOKS = {  # fork -> the skill calls that make its look
     "studio": [("run", "studio.py"), ("blender-lighting-lookdev/scripts/turntable.py", "--objects", "Hydrant",
-               "--rig", "studio", "--backdrop", "--frames", "120", "--lens", "50", "--elevation", "10")],
+               "--rig", "studio", "--backdrop", "--frames", "120", "--lens", "50", "--elevation", "10"),
+               ("run", "expose.py", "-0.7")],
     "toon": [("blender-stylized-npr/scripts/toon_setup.py", "--objects", "Hydrant", "Ground", "--bands", "3",
               "--outline", "0.006", "--rim", "0.45")],
-    "snow": [("run", "outdoor.py"), ("blender-time-of-day/scripts/scene_mood.py", "--time", "noon", "--overcast", "0.85"),
+    "snow": [("run", "outdoor.py"), ("blender-time-of-day/scripts/scene_mood.py", "--time", "afternoon", "--overcast", "0.5",
+              "--heading", "140"),
              ("blender-weather-fx/scripts/surface_weather.py", "--objects", "Hydrant", "Ground", "--snow", "0.85",
               "--snow-depth", "0.04"),
              ("blender-weather-fx/scripts/precipitation.py", "--type", "snow", "--intensity", "moderate",
-              "--ground", "Ground", "Hydrant", "--loop-frames", "120", "--distance", "10")],
+              "--ground", "Ground", "Hydrant", "--loop-frames", "120", "--distance", "10"),
+             ("run", "expose.py", "-1.0")],
     "rain": [("run", "outdoor.py"), ("blender-time-of-day/scripts/scene_mood.py", "--time", "blue_hour", "--overcast", "0.6"),
              ("blender-weather-fx/scripts/surface_weather.py", "--objects", "Hydrant", "Ground", "--wetness", "0.9",
               "--puddles", "0.5", "--ripples", "1"),
@@ -32,7 +35,7 @@ LOOKS = {  # fork -> the skill calls that make its look
               "--ground", "Ground", "Hydrant", "--loop-frames", "120", "--distance", "10")],
     "golden hour": [("run", "outdoor.py"), ("blender-time-of-day/scripts/scene_mood.py", "--time", "golden", "--heading", "200")],
     "night": [("run", "outdoor.py"), ("blender-time-of-day/scripts/scene_mood.py", "--time", "night", "--city-glow", "0.6",
-               "--stars", "1")],
+               "--stars", "1"), ("run", "streetlamp.py")],
 }
 
 d = Demo(__file__)
@@ -53,7 +56,7 @@ def make(look, sid):
         for step in LOOKS[look]:
             if step[0] == "run":
                 shutil.copy2(d.root / step[1], d.work / step[1])
-                d.cloud("run", d.work / step[1], session=sid)
+                d.cloud("run", d.work / step[1], *(["--", *step[2:]] if len(step) > 2 else []), session=sid)
             else:
                 d.cloud("run", SKILLS / step[0], "--", *step[1:], session=sid)
         name = look.replace(" ", "-")
@@ -95,8 +98,8 @@ fc = ";".join(chains) + ";" + "".join(f"[c{i}]" for i in range(6)) + f"xstack=in
 subprocess.run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", fc, "-map", "[out]", "-an", "-c:v", "libx264",
                 "-preset", "slow", "-crf", "20", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(grid)], check=True)
 poster = d.work / "grid-poster.png"
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "2.5", "-i", str(grid), "-frames:v", "1", str(poster)], check=True)
-media = d.media({"clip": grid, "poster": poster}, crop="crop=360:360:20:0")
+subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "4.6", "-i", str(grid), "-frames:v", "1", str(poster)], check=True)
+media = d.media({"clip": grid, "poster": poster}, crop="crop=340:340:895:375")  # the picker picture: night
 print(d.finish({"sessions_at_once": len(sessions), "looks": list(LOOKS), "hydrant": base,
                 "skills": sorted({s[0].split("/")[0] for v in LOOKS.values() for s in v if s[0] != "run"}), **media},
                prompt="Show me that hydrant six ways at once: studio, toon, snow, rain, golden hour and night."))

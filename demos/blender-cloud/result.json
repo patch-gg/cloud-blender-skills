@@ -1,0 +1,58 @@
+{
+ "skill": "blender-cloud",
+ "prompt": "Show me that hydrant six ways at once: studio, toon, snow, rain, golden hour and night.",
+ "numbers": {
+  "sessions_at_once": 6,
+  "looks": [
+   "studio",
+   "toon",
+   "snow",
+   "rain",
+   "golden hour",
+   "night"
+  ],
+  "hydrant": {
+   "ok": true,
+   "hydrant": "Hydrant",
+   "dims_m": [
+    0.275,
+    0.318,
+    0.799
+   ],
+   "tris": 43158,
+   "cloud": {
+    "session": "ses_01m7pz7s43ez1b340ccd85daqc",
+    "mode": "live",
+    "spent": 0,
+    "pulled": []
+   }
+  },
+  "skills": [
+   "blender-lighting-lookdev",
+   "blender-stylized-npr",
+   "blender-time-of-day",
+   "blender-weather-fx"
+  ],
+  "clip_kb": 1129,
+  "seconds": 5.0
+ },
+ "assets": [
+  {
+   "files": "demos/blender-cloud/work/assets/fire_hydrant.glb",
+   "license": "CC0-1.0",
+   "source": "https://polyhaven.com/a/fire_hydrant",
+   "author": "Poly Haven"
+  }
+ ],
+ "sessions": {
+  "ses_01m7pz7s43ez1b340ccd85daqc": 3,
+  "ses_01m7pz8r2xewy8cg9mtr1vnzj5": 0,
+  "ses_01m7pz8r2yej7rfae4h24xmy1p": 0,
+  "ses_01m7pz8r2xewy8cg9s9gkpcs23": 0,
+  "ses_01m7pz8r2yej7rfae0exf60dx5": 0,
+  "ses_01m7pz8r2yej7rfadxdymhztzb": 0,
+  "ses_01m7pvay0ge0yrmvrrbd9mpj2h": 467
+ },
+ "minutes": 3.9,
+ "blender": "5.2.0 LTS (Patch cloud)"
+}
