@@ -62,7 +62,11 @@ def _render(sc, **kw):
         if "OptiX denoiser" not in str(e) or sc.render.engine != "CYCLES":
             raise
         sc.cycles.denoiser = "OPENIMAGEDENOISE"
-        return bpy.ops.render.render(**kw)
+        persistent, sc.render.use_persistent_data = sc.render.use_persistent_data, False  # a failed render's
+        try:                                                                              # kept data renders black
+            return bpy.ops.render.render(**kw)
+        finally:
+            sc.render.use_persistent_data = persistent
 
 
 def _frames(spec, sc):
@@ -94,10 +98,13 @@ def run(engine=None, preset="preview", res=None, percent=None, samples=None, out
         sc.cycles.use_adaptive_sampling = True
         if samples:
             sc.cycles.samples = samples
-        if info["device"] == "OPTIX":
-            sc.cycles.denoiser = "OPTIX"
-        else:
-            sc.cycles.denoiser = "OPENIMAGEDENOISE"
+        # OpenImageDenoise everywhere, on the GPU when rendering there (4.1+): it is off by default in -b, and
+        # OIDN on the CPU was ~90% of a GPU frame. The OptiX denoiser fails where the driver's weights file is
+        # missing (containers, cloud GPUs, WSL).
+        sc.cycles.denoiser = "OPENIMAGEDENOISE"
+        if info["device"] != "CPU" and hasattr(sc.cycles, "denoising_use_gpu"):
+            sc.cycles.denoising_use_gpu = True
+        r.use_persistent_data = True  # keep the BVH and textures between frames of a sequence
     elif r.engine == "BLENDER_EEVEE":
         for k, v in pr["eevee"].items():
             setattr(sc.eevee, k, v)

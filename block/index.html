@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cloud blender skills</title>
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; height: 100%; background: #0b0b0c; overflow: hidden; }
+  .v { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0;
+       transition: opacity .3s ease; background: #0b0b0c; }
+  .v.on { opacity: 1; }
+  #cap { position: fixed; left: 16px; bottom: 16px; max-width: min(560px, calc(100% - 32px)); padding: 9px 12px 10px;
+         border-radius: 8px; background: rgba(11, 11, 12, .8); color: #f4f4f5;
+         font: 13px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; transition: opacity .25s; }
+  #cap.off { opacity: 0; }
+  #cap b { display: block; margin-bottom: 2px; color: #F53CD1; letter-spacing: .01em;
+           font: 600 12px/1.3 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+</style>
+</head>
+<body>
+<video class="v" id="va" muted playsinline loop preload="auto"></video>
+<video class="v" id="vb" muted playsinline loop preload="auto"></video>
+<div id="cap"><b id="name"></b><span id="line"></span></div>
+<script src="patch-block.classic.js"></script>
+<script>
+// One clip per skill, each made by an agent following that skill on Patch's cloud Blender.
+// Patch's page draws the controls (recipe.json's block section); this page only plays the clip.
+const DEMOS = /*DEMOS*/[];
+const BLOCK = /*BLOCK*/{};
+const byId = Object.fromEntries(DEMOS.map((d) => [d.id, d]));
+const defaults = Object.fromEntries((BLOCK.controls || []).map((c) => [c.id, c.default]));
+const $ = (id) => document.getElementById(id);
+let front = $('va'), back = $('vb'), cur = null, token = 0;
+let speed = defaults.speed ?? 1, caption = defaults.caption ?? true, visible = true, block = null;
+
+function show(id) {
+  const d = byId[id] || DEMOS[0];
+  if (!d || d.id === cur) return Promise.resolve();
+  cur = d.id;
+  const t = ++token;
+  $('name').textContent = d.id;
+  $('line').textContent = d.caption;
+  return new Promise((done) => {
+    const v = back;
+    const swap = () => {
+      if (t !== token) return done();
+      v.playbackRate = speed;
+      if (visible) v.play().catch(() => {});
+      v.classList.add('on');
+      front.classList.remove('on');
+      const old = front;
+      front = v;
+      back = old;
+      setTimeout(() => { if (old !== front) { old.pause(); old.removeAttribute('src'); old.load(); } }, 400);
+      done();
+    };
+    v.addEventListener('loadeddata', swap, { once: true });
+    v.addEventListener('error', swap, { once: true });
+    v.src = d.clip;
+    v.load();
+  });
+}
+
+function setCaption(on) { caption = !!on; $('cap').classList.toggle('off', !caption); }
+function setSpeed(x) { speed = Math.min(2, Math.max(0.25, Number(x) || 1)); front.playbackRate = speed; }
+function said() { if (block) block.state({ skill: cur, caption, speed }); }
+
+function step(dir) {
+  const i = DEMOS.findIndex((d) => d.id === cur);
+  show(DEMOS[(i + dir + DEMOS.length) % DEMOS.length].id).then(said);
+}
+addEventListener('keydown', (e) => {
+  if (e.code === 'ArrowRight') step(1);
+  else if (e.code === 'ArrowLeft') step(-1);
+});
+
+async function start() {
+  if (typeof window.patchBlock === 'function') {
+    block = window.patchBlock({
+      ...BLOCK,
+      onSet(id, value) {
+        if (id === 'skill') show(value);
+        else if (id === 'caption') setCaption(value);
+        else if (id === 'speed') setSpeed(value);
+      },
+      onVisible(on) {
+        visible = on;
+        if (on) front.play().catch(() => {}); else front.pause();
+      },
+    });
+    block.progress(0.2, 'Loading the first clip');
+  }
+  setCaption(caption);
+  await show(defaults.skill || (DEMOS[0] && DEMOS[0].id));
+  if (block) block.ready();
+}
+start();
+</script>
+</body>
+</html>

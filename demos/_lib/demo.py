@@ -6,8 +6,8 @@ types, logged to the demo's commands.md. Standard library only (plus ffmpeg on P
     d.run("scene.py")                            # your own bpy file, in the live session
     r = d.skill("blender-asset-qa/scripts/qa_check.py", "--objects", "Crate")
     d.look("after.jpg", "--angles", "4")
-    clip = d.render("work/demo.blend", "--engine", "BLENDER_EEVEE", "--frames", "1-96")
-    d.media(clip)                                # media/clip.mp4, poster.webp, thumb.webp
+    r = d.render("work/demo.blend", "--engine", "BLENDER_EEVEE", frames="1-96")   # PNGs on a GPU, one encode
+    d.media(r)                                   # media/clip.mp4, poster.webp, thumb.webp
     d.finish({"tris": 1234})                     # result.json + commands.md (and stops the session)
 
 Env: BAS_SESSION (a session to use, else one per demo, saved in work/.cloud-blender.json),
@@ -99,6 +99,20 @@ class Demo:
         a = ["run"] + (["--process"] if process else []) + (["--blend", blend] if blend else [])
         return self.cloud(*a, SKILLS / rel, *(["--"] + list(args) if args else []), **kw)
 
+    def asset(self, *ids):
+        """Copy assets from Patch's asset library into work/assets (pch assets add), keeping their licences
+        and credits; returns the local paths. Pass them to d.skill/d.run args and they go up by themselves."""
+        exe = os.environ.get("PCH") or shutil.which("pch") or "pch"
+        p = subprocess.run([exe, "--json", "assets", "add", *ids, "--to", str(self.work / "assets")],
+                           capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if p.returncode:
+            raise DemoError(f"pch assets add failed: {p.stderr[-800:]}")
+        r = json.loads(p.stdout)
+        self.log.append({"cmd": "pch assets add " + " ".join(ids) + " --to assets", "secs": 0, "ok": True,
+                         "quiet": False})
+        self.asset_credits = getattr(self, "asset_credits", []) + r.get("recipe_credits", [])
+        return [Path(r["root"]) / Path(c["path"]).name for c in r.get("copied", [])]
+
     def expr(self, code, **kw):
         return self.cloud("expr", code, check=kw.pop("check", True), **kw)
 
@@ -114,50 +128,74 @@ class Demo:
         self.cloud("pull", rel, quiet=True)
         return self.work / rel
 
-    def render(self, blend, *render_args, out="//render/clip", fmt="MP4", timeout=1800):
-        """Render a .blend with render_batch.py on a GPU and return the local path of the output.
-        With BAS_RENDER_SESSION: a separate `blender -b` in that GPU session (process mode).
-        Without: `cloud.py render`, a GPU job (one at a time per org)."""
+    def render(self, blend, *render_args, frames="1-96", poster=None, timeout=1800):
+        """Render a .blend's frames with render_batch.py on a GPU (PNG, lossless), encode them once into an
+        H.264 clip, and return {"clip": path, "poster": path} here (the poster is a lossless frame,
+        the middle one unless poster= says).
+        With BAS_RENDER_SESSION: separate `blender -b` and ffmpeg processes in that GPU session.
+        Without it: `cloud.py render`, a GPU job (one at a time per org), encoded here."""
         blend = Path(blend)
         if not blend.is_absolute():
             blend = self.root / blend
+        a, b = (int(x) for x in str(frames).split("-"))
+        pf = poster or (a + b) // 2
         if self.render_session:
-            box_dir = self.root.parent      # demos/, so each demo's files keep their own folder
-            rel = blend.relative_to(box_dir).as_posix()
-            self.cloud("push", blend, session=self.render_session, dir_=box_dir, quiet=True)
+            box = self.root.parent            # demos/, so each demo keeps its own folder in the box
+            rel = blend.relative_to(box).as_posix()
+            rdir = (blend.parent / "render").relative_to(box).as_posix()
+            self.cloud("push", blend, session=self.render_session, dir_=box, quiet=True)
+            exe = self._exec_box(f"rm -rf {rdir} && mkdir -p {rdir}", box)
             r = self.cloud("--timeout", timeout, "run", "--process", "--no-pull", "--blend", rel,
                            SKILLS / "blender-rendering" / "scripts" / "render_batch.py", "--",
-                           "--out", out, "--format", fmt, "--device", "GPU", *render_args,
-                           session=self.render_session, dir_=box_dir)
-            files = [f if not f.startswith("/work/") else f[len("/work/"):] for f in r.get("files", [])]
-            got = self.cloud("pull", *files, session=self.render_session, dir_=box_dir, quiet=True)
-            paths = [box_dir / f for f in got.get("pulled", [])]
-            if not paths:
-                raise DemoError(f"render produced nothing: {r}")
+                           "--out", "//render/f_####", "--format", "PNG", "--device", "GPU",
+                           "--frames", frames, *render_args, session=self.render_session, dir_=box)
             self.last_render = r
-            return paths[0] if len(paths) == 1 else paths
-        r = self.cloud("--timeout", timeout, "render", blend, "-o", self.work / "render", *render_args)
-        files = [self.work / "render" / f for f in r.get("files", [])]
+            exe = self._exec_box(
+                f"ffmpeg -v error -y -framerate 24 -start_number {a} -i {rdir}/f_%04d.png -an "
+                f"-vf 'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,"
+                f"format=yuv420p' -c:v libx264 -preset slow -crf 20 -movflags +faststart {rdir}/clip.mp4 "
+                f"&& cp {rdir}/f_{pf:04d}.png {rdir}/poster.png", box)
+            got = self.cloud("pull", f"{rdir}/clip.mp4", f"{rdir}/poster.png", session=self.render_session,
+                             dir_=box, quiet=True)
+            if len(got.get("pulled", [])) < 2:
+                raise DemoError(f"render produced nothing: {r} {exe}")
+            return {"clip": box / rdir / "clip.mp4", "poster": box / rdir / "poster.png"}
+        r = self.cloud("--timeout", timeout, "render", blend, "-o", self.work / "render", "--frames", frames,
+                       *render_args)
         self.last_render = r
-        return files[0] if len(files) == 1 else files
+        out = self.work / "render"
+        _ff("-framerate", "24", "-start_number", a, "-i", out / "frame_%04d.png", "-an", "-vf",
+            "scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,format=yuv420p",
+            "-c:v", "libx264", "-preset", "slow", "-crf", "20", "-movflags", "+faststart", out / "clip.mp4")
+        return {"clip": out / "clip.mp4", "poster": out / f"frame_{pf:04d}.png"}
+
+    def _exec_box(self, command, box):
+        exe = os.environ.get("PCH") or shutil.which("pch") or "pch"
+        p = subprocess.run([exe, "--json", "blender", "exec", self.render_session, command, "--timeout-s", "600",
+                            "--wait", "620"], capture_output=True, text=True, encoding="utf-8", errors="replace")
+        try:
+            d = json.loads(p.stdout)
+        except ValueError:
+            d = {}
+        if p.returncode or d.get("exit_code"):
+            raise DemoError(f"box command failed: {command[:80]}: {(d.get('stderr') or p.stderr)[-800:]}")
+        return d
 
     # ------------------------------------------------------------ media
 
-    def media(self, clip, poster_at=0.5, crop=None, loop=True):
-        """clip -> media/clip.mp4 (H.264, 1280x720, no audio), poster.webp, thumb.webp (112x112)."""
+    def media(self, r, crop=None):
+        """A render's clip and poster -> media/clip.mp4 (copied as is), poster.webp, thumb.webp (112x112,
+        a centred square unless crop= gives an ffmpeg crop, e.g. "crop=420:420:430:150")."""
         self.media_dir.mkdir(parents=True, exist_ok=True)
-        clip = Path(clip)
+        if not isinstance(r, dict):
+            r = {"clip": Path(r), "poster": None}
         out = self.media_dir / "clip.mp4"
-        vf = "scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,format=yuv420p"
-        _ff("-i", clip, "-an", "-vf", vf, "-c:v", "libx264", "-preset", "slow", "-crf", "24",
-            "-movflags", "+faststart", out)
-        dur = _duration(out)
-        _ff("-ss", f"{dur * poster_at:.3f}", "-i", out, "-frames:v", "1", "-c:v", "libwebp",
-            "-quality", "82", self.media_dir / "poster.webp")
-        c = crop or "crop=ih:ih,scale=112:112:flags=lanczos"
-        _ff("-ss", f"{dur * poster_at:.3f}", "-i", out, "-frames:v", "1", "-vf", c, "-c:v", "libwebp",
-            "-quality", "80", self.media_dir / "thumb.webp")
-        return {"clip_kb": round(out.stat().st_size / 1024), "seconds": round(dur, 2)}
+        shutil.copy2(r["clip"], out)
+        src = r.get("poster") or out
+        _ff("-i", src, "-frames:v", "1", "-c:v", "libwebp", "-q:v", "86", self.media_dir / "poster.webp")
+        c = (crop + "," if crop else "crop=ih:ih,") + "scale=112:112:flags=lanczos"
+        _ff("-i", src, "-frames:v", "1", "-vf", c, "-c:v", "libwebp", "-q:v", "88", self.media_dir / "thumb.webp")
+        return {"clip_kb": round(out.stat().st_size / 1024), "seconds": round(_duration(out), 2)}
 
     # ------------------------------------------------------------ end
 
@@ -178,7 +216,12 @@ class Demo:
             if r.get("spent") is not None:
                 self.spent[self.session] = r["spent"]
         per = self.credits() if not stop else {k: v for k, v in self.spent.items()}
-        result = {"skill": self.skill_name, "prompt": prompt, "numbers": numbers,
+        credits = getattr(self, "asset_credits", [])
+        if credits:
+            lines = ["# credits", ""] + [f"- `{Path(c['files']).name}`: {c.get('author')}, {c.get('license')}, "
+                                         f"{c.get('source')} (from Patch's asset library)" for c in credits]
+            (self.root / "CREDITS.md").write_text("\n".join(lines) + "\n", "utf-8")
+        result = {"skill": self.skill_name, "prompt": prompt, "numbers": numbers, "assets": credits or None,
                   "sessions": per, "minutes": round((time.time() - self.t0) / 60, 1),
                   "blender": "5.2.0 LTS (Patch cloud)"}
         (self.root / "result.json").write_text(json.dumps(result, indent=1) + "\n", "utf-8")
