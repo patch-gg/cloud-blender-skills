@@ -94,6 +94,8 @@ def _export(fmt, path, kw):
     if fmt == "fbx":
         return bpy.ops.export_scene.fbx(filepath=path, **kw)
     if fmt == "gltf":
+        if kw.get("export_meshopt_compression_enable"):
+            bx.gltf_meshopt_fix()
         return bpy.ops.export_scene.gltf(filepath=path, **kw)
     return bpy.ops.wm.usd_export(filepath=path, **kw)
 

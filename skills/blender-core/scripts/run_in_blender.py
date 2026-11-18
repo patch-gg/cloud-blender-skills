@@ -8,6 +8,8 @@ Usage:
   python run_in_blender.py [--blend FILE] [--user-prefs] SCRIPT.py [-- script args]
   python run_in_blender.py --expr "import bpy; print(bpy.app.version_string)"
   python run_in_blender.py --which          # print the Blender path it would use
+  python run_in_blender.py --cloud [--session ses_...] [--process] [--blend FILE] SCRIPT.py [-- args]
+      # the same call on Patch's cloud Blender (costs credits): see blender-cloud/scripts/cloud.py
 Exit code: 0 ok, 1 script error, 2 Blender not found.
 """
 import glob
@@ -51,9 +53,12 @@ def main():
     if "--" in a:
         i = a.index("--")
         a, rest = a[:i], a[i + 1:]
+    if "--cloud" in a:
+        return cloud_main(a, rest)
     exe = find_blender()
     if not exe:
-        print(json.dumps({"ok": False, "error": "Blender not found; set BLENDER_EXE"}))
+        print(json.dumps({"ok": False, "error": "Blender not found; set BLENDER_EXE, or add --cloud "
+                          "to run on Patch's cloud Blender (blender-cloud skill)"}))
         return 2
     if "--which" in a:
         print(exe)
@@ -85,6 +90,34 @@ def main():
         tail = (p.stderr or p.stdout).strip().splitlines()[-15:]
         print(json.dumps({"ok": False, "returncode": p.returncode, "log_tail": tail}))
     return 0 if p.returncode == 0 else 1
+
+
+def cloud_main(a, rest):
+    """--cloud: hand the same call to blender-cloud/scripts/cloud.py (Patch's cloud Blender)."""
+    import importlib.util
+    here = os.path.dirname(os.path.realpath(__file__))
+    path = os.path.join(here, "..", "..", "blender-cloud", "scripts", "cloud.py")
+    if not os.path.isfile(path):
+        print(json.dumps({"ok": False, "error": "--cloud needs the blender-cloud skill installed"}))
+        return 2
+    spec = importlib.util.spec_from_file_location("bas_cloud", path)
+    cloud = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cloud)
+    pre = ["--session", a[a.index("--session") + 1]] if "--session" in a else []
+    if "--which" in a:
+        return cloud.main(pre + ["status"])
+    if "--expr" in a:
+        return cloud.main(pre + ["expr", a[a.index("--expr") + 1]])
+    scripts = [x for x in a if x.endswith(".py")]
+    if not scripts:
+        print(__doc__)
+        return 1
+    run = ["run", scripts[0]]
+    if "--blend" in a:
+        run += ["--blend", a[a.index("--blend") + 1]]
+    if "--process" in a:
+        run.append("--process")
+    return cloud.main(pre + run + ["--"] + rest)
 
 
 if __name__ == "__main__":

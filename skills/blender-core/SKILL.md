@@ -1,6 +1,6 @@
 ---
 name: blender-core
-description: Foundation for any Blender 5.2+ task an agent drives - running bpy via MCP (live) or headless CLI, context overrides, locale-safe node lookup, enum discovery, 5.x API changes, verification. Use first for any Blender, bpy, .blend or 3D-asset request; routes to the specialized blender-* skills.
+description: Foundation for any Blender 5.2+ task an agent drives - running bpy via MCP (live), headless CLI or Patch's cloud Blender, context overrides, locale-safe node lookup, enum discovery, 5.x API changes, verification. Use first for any Blender, bpy, .blend or 3D-asset request; routes to the specialized blender-* skills.
 license: MIT
 compatibility: Blender 5.2 LTS or newer, verified on 5.3. Optional blender-mcp server for live sessions.
 metadata:
@@ -38,6 +38,7 @@ metadata:
 | Cloth, rigid body, fluids, hair, GN physics | `blender-simulation` |
 | Writing add-ons / extensions | `blender-addon-development` |
 | Batch/headless pipelines, file conversion | `blender-pipeline-automation` |
+| No local Blender, GPU renders, running on Patch's cloud Blender | `blender-cloud` |
 | Checking a mesh/asset before delivery (always) | `blender-asset-qa` |
 | End-to-end playbooks (prop, character, Roblox, product shot) | `blender-workflow-recipes` |
 
@@ -53,6 +54,7 @@ Each MCP call runs in a **fresh namespace**: re-`import` in every call. That's c
 python <skills_dir>/blender-core/scripts/run_in_blender.py --blend in.blend <script.py> -- --objects Chair --save out.blend
 python <skills_dir>/blender-core/scripts/run_in_blender.py --expr "import bpy; print(len(bpy.data.objects))"
 ```
+**Cloud (Patch's cloud Blender, nothing to install)**: add `--cloud` to the headless call. It runs in a live session that keeps the scene between calls and costs credits; files go up and come back by themselves. See `blender-cloud`.
 **Windows + Git Bash**: MSYS rewrites `//out.png` to `/out.png` (→ `C:\out.png`). Prefix with `MSYS_NO_PATHCONV=1` and pass skill paths as `$(cygpath -m ~/.claude/skills)/...` (or use PowerShell).
 Raw form: `blender -b in.blend --factory-startup --python-exit-code 1 -P x.py -- args`. Every script here exposes `run(**kw) -> dict` and the same flags after `--`.
 **First call in a session**: `scripts/env_report.py`, which returns the version, engines, GPU, add-ons, units, color management and scene counts.

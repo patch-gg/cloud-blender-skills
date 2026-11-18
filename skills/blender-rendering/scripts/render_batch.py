@@ -53,6 +53,18 @@ def _gpu(sc, device):
     return "CPU"
 
 
+def _render(sc, **kw):
+    """bpy.ops.render.render, retried once with OpenImageDenoise when the OptiX denoiser can't start
+    (sandboxed or virtualized GPUs, such as cloud sessions and WSL, render on OptiX but fail there)."""
+    try:
+        return bpy.ops.render.render(**kw)
+    except RuntimeError as e:
+        if "OptiX denoiser" not in str(e) or sc.render.engine != "CYCLES":
+            raise
+        sc.cycles.denoiser = "OPENIMAGEDENOISE"
+        return bpy.ops.render.render(**kw)
+
+
 def _frames(spec, sc):
     if not spec:
         return [sc.frame_current]
@@ -127,23 +139,25 @@ def run(engine=None, preset="preview", res=None, percent=None, samples=None, out
             sc.frame_start, sc.frame_end = fr[0], fr[-1]
             r.filepath = stem
             t = time.time()
-            bpy.ops.render.render(animation=True)
+            _render(sc, animation=True)
             times.append(time.time() - t)
-            files.append(stem + ext)
+            files.append(r.frame_path(frame=sc.frame_start))  # Blender names movies <stem>0001-0120.mp4
             continue
         for f in _frames(frames, sc):
             sc.frame_set(f)
             path = f"{stem}{f:04d}{ext}"
             r.filepath = path
             t = time.time()
-            bpy.ops.render.render(write_still=True)
+            _render(sc, write_still=True)
             times.append(time.time() - t)
             files.append(path)
-    info.update({"ok": all(os.path.exists(f) for f in files) or media == "VIDEO", "files": files,
+    info.update({"ok": all(os.path.exists(f) for f in files), "files": files,
                  "sec_per_image": round(sum(times) / max(len(times), 1), 2),
                  "res": [r.resolution_x * r.resolution_percentage // 100,
                          r.resolution_y * r.resolution_percentage // 100],
                  "view": sc.view_settings.view_transform})
+    if r.engine == "CYCLES":
+        info["denoiser"] = sc.cycles.denoiser if sc.cycles.use_denoising else None
     return info
 
 

@@ -134,3 +134,18 @@ def r(v, n=4):
     if isinstance(v, float):
         return round(v, n)
     return [round(x, n) for x in v]
+
+
+def gltf_meshopt_fix():
+    """Blender 5.2.0 (Linux) can't load its own glTF meshopt encoder: the bridge's library path
+    misses Blender's lib folder, so meshopt export fails with "libmeshoptimizer.so: cannot open".
+    Preloading that library from beside the Blender binary fixes it; a no-op where it isn't needed."""
+    import ctypes
+    import os
+    lib = os.path.join(os.path.dirname(os.path.realpath(bpy.app.binary_path or "")), "lib",
+                       "libmeshoptimizer.so")
+    if os.path.isfile(lib):
+        try:
+            ctypes.CDLL(lib, mode=ctypes.RTLD_GLOBAL)
+        except OSError:
+            pass

@@ -9,7 +9,7 @@ import wave
 import bmesh
 import bpy
 import numpy as np
-from run_all import TMP, requires_gpu, skill_module
+from run_all import TMP, requires_window, skill_module
 
 HERE = pathlib.Path(__file__).resolve().parent
 
@@ -122,7 +122,7 @@ def _footage(out):
 
 
 def test_track_camera_solves_in_ui_session():
-    requires_gpu()  # opens a real Blender window: Clip Editor operators don't run in -b
+    requires_window()  # opens a real Blender window: Clip Editor operators don't run in -b
     out = TMP / "footage"
     out.mkdir(exist_ok=True)
     _footage(out)

@@ -8,3 +8,7 @@ export/
 textures/
 .DS_Store
 .claude/settings.local.json
+.cloud-blender.json
+demos/*/work/
+node_modules/
+patch.json

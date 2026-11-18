@@ -46,6 +46,14 @@ def requires_gpu():
         raise Skip("needs GPU context")
 
 
+def requires_window():
+    """Skip where Blender can't open a window: BAS_SKIP_GPU=1, or BAS_NO_WINDOW=1 (headless machines
+    such as Patch's cloud sessions, which render EEVEE and Workbench fine but have no display)."""
+    requires_gpu()
+    if os.environ.get("BAS_NO_WINDOW") == "1":
+        raise Skip("needs a Blender window")
+
+
 def main():
     flt = sys.argv[sys.argv.index("--") + 1] if "--" in sys.argv and sys.argv[-1] != "--" else ""
     passed, failed, skipped = 0, [], 0

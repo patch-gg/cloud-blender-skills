@@ -50,6 +50,8 @@ CASES = [
     ("track the camera from this footage and solve it", "blender-video-editing"),
     ("retarget mixamo mocap onto my rig", "blender-animation"),
     ("check the walk cycle loops without a pop", "blender-animation"),
+    ("no blender installed here, run it in the cloud on patch", "blender-cloud"),
+    ("render this animation on a cloud gpu session", "blender-cloud"),
 ]
 
 
